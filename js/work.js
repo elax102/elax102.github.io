@@ -132,7 +132,7 @@ function update() {
 	CB1leftStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
 	CB1leftStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
 
-	if (Math.abs(CB1leftStickX) > DEADZONE || Math.abs(CB1leftStickY) > DEADZONE) {
+	if (Math.abs(CB1leftStickX) > DEADZONE_LEFTJS || Math.abs(CB1leftStickY) > DEADZONE_LEFTJS) {
         CB1.body.velocity.x = SPEED * CB1leftStickX;
         CB1.body.velocity.y = SPEED * CB1leftStickY;
 
@@ -158,7 +158,7 @@ function update() {
 	//============== Cowboy 2 Gamepad =================
 	CB2leftStickX = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
 	CB2leftStickY = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
-	if (Math.abs(CB2leftStickX) > DEADZONE || Math.abs(CB2leftStickY) > DEADZONE) {
+	if (Math.abs(CB2leftStickX) > DEADZONE_LEFTJS || Math.abs(CB2leftStickY) > DEADZONE_LEFTJS) {
         CB2.body.velocity.x = SPEED * CB2leftStickX;
         CB2.body.velocity.y = SPEED * CB2leftStickY;
 
