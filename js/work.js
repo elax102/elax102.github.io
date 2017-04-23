@@ -155,7 +155,7 @@ function update() {
 	//Mouse
 	//CB1.rotation = fixRotation(game.physics.arcade.angleToPointer(CB1));
 
-	//============== Cowboy 1 Gamepad =================
+//==================== Cowboy 1 Gamepad =======================
 	CB1leftStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
 	CB1leftStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
 
@@ -181,7 +181,7 @@ function update() {
 			fixRotation(Math.atan2(CB1rightStickY, CB1rightStickX)) * (180/Math.PI);
 	}
 
-	//============== Cowboy 2 Gamepad =================
+//==================== Cowboy 2 Gamepad =======================
 	CB2leftStickX = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
 	CB2leftStickY = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
 	if (Math.abs(CB2leftStickX) > DEADZONE_LEFTJS || Math.abs(CB2leftStickY) > DEADZONE_LEFTJS) {
@@ -201,10 +201,11 @@ function update() {
 		CB2.angle =
 			fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
 	}
-//================= Collisions ====================
+//======================= Collisions ==========================
 	game.physics.arcade.collide(CB1,scenary);
 	game.physics.arcade.collide(CB2,scenary);
 	game.physics.arcade.overlap(CB1bullets, scenary, function(CB1bullet){ CB1bullet.kill(); });
+	game.physics.arcade.overlap(CB2bullets, scenary, function(CB2bullet){ CB2bullet.kill(); });
 	game.physics.arcade.overlap(CB1bullets, CB2, function(CB1bulletAndCB2){CB1bulletAndCB2.kill(); });
 	game.physics.arcade.overlap(CB2bullets, CB1, function(CB2bulletAndCB1){CB2bulletAndCB1.kill(); });
 	game.physics.arcade.collide(ammos, CB2, function(CB2, ammo){ammo.kill();  reload.play(); CB2bulletnum++;  });
