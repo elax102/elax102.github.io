@@ -13,6 +13,7 @@ function preload () {
 	game.load.image('Bullet', 'img/bullet.png');
 	game.load.image('background', 'img/bg1-tiled.png');
 	game.load.image('rock', 'img/rock1.png');
+	game.load.image('crate2x1', 'img/crate2x1.png');
 
   game.load.audio('foot', 'sfx/foot.wav');
   game.load.audio('bulletspawn', 'sfx/bulletdrop.wav');
@@ -45,10 +46,21 @@ function create() {
 	game.input.gamepad.pad1.deadZone = 0.01;
 	game.input.gamepad.pad2.deadZone = 0.01;
 
-	rock = game.add.sprite( 200, 200, 'rock');
-	game.physics.enable(rock, Phaser.Physics.ARCADE);
-	rock.body.immovable = true;
-	rock.body.setSize(58,58,2,2);
+	//groups
+	scenary = game.add.group();
+	scenary.enableBody = true;
+	game.physics.enable(scenary, Phaser.Physics.ARCADE);
+	
+	rock1 = game.add.sprite(200, 200, 'rock'); scenary.add(rock1);
+	rock2 = game.add.sprite(400, 500, 'rock'); scenary.add(rock2);
+	rock3 = game.add.sprite(500, 300, 'rock'); scenary.add(rock3);
+	rock4 = game.add.sprite(100, 570, 'rock'); scenary.add(rock4);
+	crate1 = game.add.sprite(640, 80, 'crate2x1'); scenary.add(crate1);
+	crate2 = game.add.sprite(342, 500, 'crate2x1'); scenary.add(crate2);
+	
+	scenary.forEachExists(function(child){ child.body.immovable = true; }, this);
+	// rock2.body.immovable = true;
+	// rock2.body.setSize(58,58,2,2);
 
 	ammo=game.add.sprite(100, 300, 'Bullet');
 	game.physics.enable(ammo, Phaser.Physics.ARCADE);
@@ -59,7 +71,6 @@ function create() {
     bullets.enableBody = true;
 	game.physics.arcade.enable(bullets, Phaser.Physics.ARCADE);
 
-    //bullets.physicsBodyType = Phaser.Physics.ARCADE;
 
     bullets.createMultiple(50, 'Bullet');
     bullets.setAll('checkWorldBounds', true);
@@ -76,11 +87,10 @@ function create() {
 	CB1.body.collideWorldBounds = true;
 
 	CB1.body.setSize(58,58,3,3);
-	CB1.body.allowRotation = true;
 	CB1Pad.addCallbacks(this, { onConnect: CB1addButtons });
 
 	//================ Cowboy 2 =====================
-	CB2 = game.add.sprite(800, 800, 'CB2');
+	CB2 = game.add.sprite(600, 600, 'CB2');
 	CB2.anchor.set(0.5, 0.5);
 
 	game.physics.arcade.enable(CB2, Phaser.Physics.ARCADE);
@@ -88,7 +98,7 @@ function create() {
 
 	CB2.body.collideWorldBounds = true;
 
-    CB2.body.setCircle(30);
+    CB2.body.setSize(58,58,3,3);
 	CB2Pad.addCallbacks(this, { onConnect: CB1addButtons });
 
   // Add sfx
@@ -116,8 +126,6 @@ function update() {
 	//CB1.rotation = fixRotation(game.physics.arcade.angleToPointer(CB1));
 
 
-	//================= Collisions ====================
-	game.physics.arcade.collide(CB1,rock);
 
 	//============== Cowboy 1 Gamepad =================
 	CB1leftStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
@@ -132,7 +140,6 @@ function update() {
 	
 	CB1rightStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB1rightStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
-
 
 	if (Math.abs(CB1rightStickX) > DEADZONE_RIGHTJS 
 		|| Math.abs(CB1rightStickY) > DEADZONE_RIGHTJS){
@@ -159,9 +166,12 @@ function update() {
 		CB2.angle =
 			fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
 	}
-	game.physics.arcade.overlap(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this);
-	game.physics.arcade.overlap(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this);
-
+	
+	//================= Collisions ====================
+	game.physics.arcade.collide(CB1,scenary);
+	game.physics.arcade.collide(CB2,scenary);
+	game.physics.arcade.overlap(bullets, scenary, function(bullet){ bullet.kill(); });
+	game.physics.arcade.overlap(bullets, CB2, function(bullet){ bullet.kill(); });
 	game.physics.arcade.collide(ammo, CB1, pickHandler, null, this);
    /* if (game.input.activePointer.isDown && bulletnum > 0)
     {
@@ -269,9 +279,9 @@ function render() {
     game.debug.text('Active Bullets: ' + bulletnum + ' / ' + bullets.total, 32, 32);
     game.debug.spriteInfo(CB1, 32, 450);
 	bullets.forEachAlive(renderGroup, this);
+	scenary.forEachAlive(renderGroup, this);
     game.debug.body(ammo);
 	game.debug.body(CB1);
-	game.debug.body(rock);
 	game.debug.body(CB2);
 }
 
