@@ -116,11 +116,11 @@ function update() {
 	CB1leftStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
 	CB1leftStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
 	if (CB1leftStickX < -DEADZONE || CB1leftStickX > DEADZONE) {
-        CB1.body.velocity.x = SPEED * CB1leftStickX;
-    }
-    if (CB1leftStickY < -DEADZONE || CB1leftStickY > DEADZONE) {
-        CB1.body.velocity.y = SPEED * CB1leftStickY;
-    }
+      CB1.body.velocity.x = SPEED * CB1leftStickX;
+  }
+  if (CB1leftStickY < -DEADZONE || CB1leftStickY > DEADZONE) {
+      CB1.body.velocity.y = SPEED * CB1leftStickY;
+  }
 
 	CB1rightStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB1rightStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
@@ -131,11 +131,11 @@ function update() {
 	CB2leftStickX = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
 	CB2leftStickY = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
 	if (CB2leftStickX < -DEADZONE || CB2leftStickX > DEADZONE) {
-        CB2.body.velocity.x = SPEED * CB2leftStickX;
-    }
-    if (CB2leftStickY < -DEADZONE || CB2leftStickY > DEADZONE) {
-        CB2.body.velocity.y = SPEED * CB2leftStickY;
-    }
+      CB2.body.velocity.x = SPEED * CB2leftStickX;
+  }
+  if (CB2leftStickY < -DEADZONE || CB2leftStickY > DEADZONE) {
+      CB2.body.velocity.y = SPEED * CB2leftStickY;
+  }
 
 	CB2rightStickX = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB2rightStickY = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
