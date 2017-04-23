@@ -35,10 +35,13 @@ function create() {
 	ammo=game.add.sprite(100, 300, 'Bullet');
 	game.physics.enable(ammo, Phaser.Physics.ARCADE);
 	
+	ammo.body.setSize(13, 13, 8, 5);
+	ammo.body.setCircle(9);
 	bullets = game.add.group();
     bullets.enableBody = true;
     bullets.physicsBodyType = Phaser.Physics.ARCADE;
-
+	
+	
     bullets.createMultiple(50, 'Bullet');
     bullets.setAll('checkWorldBounds', true);
     bullets.setAll('outOfBoundsKill', true);
@@ -51,10 +54,11 @@ function create() {
 	
 	game.physics.arcade.enable(CB1, Phaser.Physics.ARCADE);
 	CB1Pad = game.input.gamepad.pad1;
-	CB1Pad.addCallbacks(this, { onConnect: addButtons });
+	
 	CB1.body.collideWorldBounds = true;
 
 	CB1.body.setCircle(30);
+	CB1Pad.addCallbacks(this, { onConnect: CB1addButtons });
 	//================ Cowboy 2 =====================
 	CB2 = game.add.sprite(300, 300, 'CB2');
 	CB2.anchor.set(0.5, 0.5);
@@ -65,6 +69,8 @@ function create() {
 	CB2.body.collideWorldBounds = true;
 	
     CB2.body.setCircle(30);
+	CB2Pad.addCallbacks(this, { onConnect: CB1addButtons });
+	
 }
 
 function update() {
@@ -125,7 +131,7 @@ function update() {
         fire();
     }*/
 }
-function addButtons() {
+function CB1addButtons() {
 
     /*leftTriggerButton = CB1Pad.getButton(Phaser.Gamepad.XBOX360_LEFT_TRIGGER);
 
@@ -135,20 +141,30 @@ function addButtons() {
 
     rightTriggerButton = CB1Pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
 
-    rightTriggerButton.onDown.add(onRightTrigger);
-    rightTriggerButton.onUp.add(onRightTrigger);
-    rightTriggerButton.onFloat.add(onRightTrigger);
+    rightTriggerButton.onDown.add(CB1fire);
+   
 
 }
 //function onLeftTrigger(button, value) {
 
  
 //}
+function CB2addButtons() {
 
-function onRightTrigger(buttonCode, value) {
+    /*leftTriggerButton = CB1Pad.getButton(Phaser.Gamepad.XBOX360_LEFT_TRIGGER);
 
-   fire();
+    leftTriggerButton.onDown.add(onLeftTrigger);
+    leftTriggerButton.onUp.add(onLeftTrigger);
+    leftTriggerButton.onFloat.add(onLeftTrigger);*/
+
+    rightTriggerButton = CB2Pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
+
+    rightTriggerButton.onDown.add(CB2fire);
+    
+
 }
+
+
 
 	
 	
@@ -164,17 +180,35 @@ function hitHandler (obj1, obj2){
 	game.stage.backgroundColor = '#992d2d';
 	//destorysprite(obj1);
 }
-function fire() {
+function CB1fire() {
+
+    if (game.time.now > nextFire && bullets.countDead() > 0)
+    {
+        nextFire = game.time.now + fireRate;
+		
+
+        var bullet = bullets.getFirstDead();
+		bullet.body.setSize(13, 13, 8, 5);
+	bullet.body.setCircle(9);
+        bullet.reset(CB1.x, CB1.y);
+		bullet.rotation = CB1.rotation;
+        game.physics.arcade.velocityFromRotation(CB1.rotation -1.57079633, 2000, bullet.body.velocity);
+		bulletnum = bulletnum-1;
+    }
+}
+
+function CB2fire() {
 
     if (game.time.now > nextFire && bullets.countDead() > 0)
     {
         nextFire = game.time.now + fireRate;
 
         var bullet = bullets.getFirstDead();
-
-        bullet.reset(CB1.x, CB1.y);
-		bullet.rotation = CB1.rotation;
-        game.physics.arcade.moveToPointer(bullet, 2000);
+		bullet.body.setSize(13, 13, 8, 5);
+	bullet.body.setCircle(9);
+        bullet.reset(CB2.x, CB2.y);
+		bullet.rotation = CB2.rotation;
+        game.physics.arcade.velocityFromRotation(CB2.rotation-1.57079633, 2000, bullet.body.velocity);
 		bulletnum = bulletnum-1;
     }
 }
