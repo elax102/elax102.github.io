@@ -4,7 +4,7 @@ var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create
 
 const SPEED = 700;
 
-const DEADZONE = 0.001;
+const DEADZONE = 0.01;
 
 function preload () {
 	game.load.image('CB1', 'img/cowboy1.png');
@@ -19,9 +19,9 @@ var fireRate = 1000;
 var nextFire = 0;
 var bulletnum = 1;
 
-var CB1
-var CB2
-var bullets
+var CB1;
+var CB2;
+var bullets;
 
 function create() {
 
@@ -112,23 +112,28 @@ function update() {
 	CB1rightStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB1rightStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
 	
-	CB1.angle = fixRotation(Math.atan2(CB1rightStickY, CB1rightStickX)) * (180/Math.PI);
+	if (Math.abs(CB1rightStickX) > DEADZONE || Math.abs(CB1rightStickY) > DEADZONE){	
+		CB1.angle = 
+			fixRotation(Math.atan2(CB1rightStickY, CB1rightStickX)) * (180/Math.PI);
+	}
 	
 	//============== Cowboy 2 Gamepad =================
 	CB2leftStickX = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
 	CB2leftStickY = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
-	if (CB2leftStickX < -DEADZONE || CB2leftStickX > DEADZONE) {
+	if (Math.abs(CB2leftStickX) > DEADZONE) {
         CB2.body.velocity.x = SPEED * CB2leftStickX;
     }
-    if (CB2leftStickY < -DEADZONE || CB2leftStickY > DEADZONE) {
+    if (Math.abs(CB2leftStickY) > DEADZONE) {
         CB2.body.velocity.y = SPEED * CB2leftStickY;
     }
 	
 	CB2rightStickX = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB2rightStickY = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
 	
-	CB2.angle = fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
-	
+	if (Math.abs(CB2rightStickX) > DEADZONE || Math.abs(CB2rightStickY) > DEADZONE){	
+		CB2.angle = 
+			fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
+	}
 	game.physics.arcade.overlap(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this); 
 	game.physics.arcade.overlap(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this);
 	
@@ -235,9 +240,13 @@ function render() {
 
     game.debug.text('Active Bullets: ' + bulletnum + ' / ' + bullets.total, 32, 32);
     game.debug.spriteInfo(CB1, 32, 450);
-	//game.debug.body(Bullets.bullet);
+	bullets.forEachAlive(renderGroup, this);
     game.debug.body(ammo);
 	game.debug.body(CB1);
 	game.debug.body(rock);
 	game.debug.body(CB2);
+}
+
+function renderGroup(member) {
+	game.debug.body(member);
 }
