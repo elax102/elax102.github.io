@@ -11,7 +11,8 @@ function preload () {
 	game.load.image('CB2', 'img/cowboy2.png');
 	game.load.image('Bullet', 'img/bullet.png');
 	game.load.image('background', 'img/bg1-tiled.png');
-game.load.image('rock', 'img/rock1.png');}
+	game.load.image('rock', 'img/rock1.png');
+}
 
 var genloc = [{x1:0,x2:350,y1:0,Y2:350}, {x1:0,x2:350,y1:350,Y2:700}, {x1:350,x2:700,y1:0,Y2:350}, {x1:350,x2:700,y1:350,Y2:700} ];
 var fireRate = 1000;
