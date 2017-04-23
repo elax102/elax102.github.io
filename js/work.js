@@ -146,8 +146,6 @@ function update() {
 	//Mouse
 	//CB1.rotation = fixRotation(game.physics.arcade.angleToPointer(CB1));
 
-
-
 	//============== Cowboy 1 Gamepad =================
 	CB1leftStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
 	CB1leftStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
