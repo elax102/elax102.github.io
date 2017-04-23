@@ -126,9 +126,8 @@ function update() {
     }
 }
 
-	
-	
-function fixRotation(rotation) {  return rotation + 1.57079633;}
+function fixRotation(rotation) { return rotation + 1.57079633; }
+
 function pickHandler (obj1, obj2) {
 
     bulletnum=bulletnum+1;
