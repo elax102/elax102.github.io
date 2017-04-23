@@ -4,14 +4,15 @@ var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create
 
 const SPEED = 700;
 
-const DEADZONE = 0.001;
+const DEADZONE = 0.01;
 
 function preload () {
 	game.load.image('CB1', 'img/cowboy1.png');
 	game.load.image('CB2', 'img/cowboy2.png');
 	game.load.image('Bullet', 'img/bullet.png');
 	game.load.image('background', 'img/bg1-tiled.png');
-  game.load.image('rock', 'img/rock1.png');
+	game.load.image('rock', 'img/rock1.png');
+}
 
   game.load.audio('foot', 'sfx/foot.wav');
   game.load.audio('bulletspawn', 'sfx/bulletdrop.wav');
@@ -41,19 +42,22 @@ function create() {
 	game.add.tileSprite(0, 0, 700, 700, 'background');
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	game.input.gamepad.start();
+
 	rock = game.add.sprite( 200, 200, 'rock');
 	game.physics.enable(rock, Phaser.Physics.ARCADE);
 	rock.body.immovable = true;
-	rock.body.setCircle(30);
+	rock.body.setSize(58,58,2,2);
+
 	ammo=game.add.sprite(100, 300, 'Bullet');
 	game.physics.enable(ammo, Phaser.Physics.ARCADE);
-
 	ammo.body.setSize(13, 13, 8, 5);
 	ammo.body.setCircle(9);
+
 	bullets = game.add.group();
     bullets.enableBody = true;
-    bullets.physicsBodyType = Phaser.Physics.ARCADE;
+	game.physics.arcade.enable(bullets, Phaser.Physics.ARCADE);
 
+    //bullets.physicsBodyType = Phaser.Physics.ARCADE;
 
     bullets.createMultiple(50, 'Bullet');
     bullets.setAll('checkWorldBounds', true);
@@ -69,11 +73,12 @@ function create() {
 
 	CB1.body.collideWorldBounds = true;
 
-	CB1.body.setCircle(30);
+	CB1.body.setSize(58,58,3,3);
+	CB1.body.allowRotation = true;
 	CB1Pad.addCallbacks(this, { onConnect: CB1addButtons });
 
 	//================ Cowboy 2 =====================
-	CB2 = game.add.sprite(300, 300, 'CB2');
+	CB2 = game.add.sprite(800, 800, 'CB2');
 	CB2.anchor.set(0.5, 0.5);
 
 	game.physics.arcade.enable(CB2, Phaser.Physics.ARCADE);
@@ -125,25 +130,31 @@ function update() {
 	CB1rightStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB1rightStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
 
-	CB1.angle = fixRotation(Math.atan2(CB1rightStickY, CB1rightStickX)) * (180/Math.PI);
+
+	if (Math.abs(CB1rightStickX) > DEADZONE || Math.abs(CB1rightStickY) > DEADZONE){
+		CB1.angle =
+			fixRotation(Math.atan2(CB1rightStickY, CB1rightStickX)) * (180/Math.PI);
+	}
 
 	//============== Cowboy 2 Gamepad =================
 	CB2leftStickX = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
 	CB2leftStickY = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
-	if (CB2leftStickX < -DEADZONE || CB2leftStickX > DEADZONE) {
-      CB2.body.velocity.x = SPEED * CB2leftStickX;
-  }
-  if (CB2leftStickY < -DEADZONE || CB2leftStickY > DEADZONE) {
-      CB2.body.velocity.y = SPEED * CB2leftStickY;
-  }
+	if (Math.abs(CB2leftStickX) > DEADZONE) {
+        CB2.body.velocity.x = SPEED * CB2leftStickX;
+    }
+    if (Math.abs(CB2leftStickY) > DEADZONE) {
+        CB2.body.velocity.y = SPEED * CB2leftStickY;
+    }
 
 	CB2rightStickX = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB2rightStickY = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
 
-	CB2.angle = fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
-
-	game.physics.arcade.collide(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this);
-	game.physics.arcade.collide(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this);
+	if (Math.abs(CB2rightStickX) > DEADZONE || Math.abs(CB2rightStickY) > DEADZONE){
+		CB2.angle =
+			fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
+	}
+	game.physics.arcade.overlap(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this);
+	game.physics.arcade.overlap(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this);
 
 	game.physics.arcade.collide(ammo, CB1, pickHandler, null, this);
    /* if (game.input.activePointer.isDown && bulletnum > 0)
@@ -206,7 +217,7 @@ function CB1fire() {
 
         var bullet = bullets.getFirstDead();
 		bullet.body.setSize(13, 13, 8, 5);
-	bullet.body.setCircle(9);
+		bullet.body.setCircle(9);
         bullet.reset(CB1.x, CB1.y);
 		bullet.rotation = CB1.rotation;
         game.physics.arcade.velocityFromRotation(CB1.rotation -1.57079633, 2000, bullet.body.velocity);
@@ -248,9 +259,13 @@ function render() {
 
     game.debug.text('Active Bullets: ' + bulletnum + ' / ' + bullets.total, 32, 32);
     game.debug.spriteInfo(CB1, 32, 450);
-	//game.debug.body(Bullets.bullet);
+	bullets.forEachAlive(renderGroup, this);
     game.debug.body(ammo);
 	game.debug.body(CB1);
 	game.debug.body(rock);
 	game.debug.body(CB2);
+}
+
+function renderGroup(member) {
+	game.debug.body(member);
 }
