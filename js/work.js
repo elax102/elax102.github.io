@@ -12,8 +12,7 @@ function preload () {
 	game.load.image('Bullet', 'img/bullet.png');
 	game.load.image('background', 'img/bg1-tiled.png');
 	game.load.image('rock', 'img/rock1.png');
-}
-
+  
   game.load.audio('foot', 'sfx/foot.wav');
   game.load.audio('bulletspawn', 'sfx/bulletdrop.wav');
   game.load.audio('reload', 'sfx/reload.wav');
