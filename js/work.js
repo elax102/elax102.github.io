@@ -25,12 +25,18 @@ function preload () {
   var genloc = [{x1:0,x2:350,y1:0,y2:350}, {x1:0,x2:350,y1:350,y2:700}, {x1:350,x2:700,y1:0,y2:350}, {x1:350,x2:700,y1:350,y2:700} ];
   var fireRate = 1000;
   var nextFire = 0;
-  var bulletnum = 1;
+  var CB1bulletnum = 1;
+  var CB2bulletnum = 1;
+  
+  
 var bsx;
 var bsy;
   var CB1;
   var CB2;
-  var bullets;
+  var CB1bullets;
+  var CB2bullets;
+  var CB1bullet;
+  var CB2bullet;
 var ammos;
   var ammo;
   
@@ -73,16 +79,26 @@ function create() {
     ammos.setAll('checkWorldBounds', true);
     ammos.setAll('outOfBoundsKill', true);
 
-	bullets = game.add.group();
-    bullets.enableBody = true;
-	game.physics.arcade.enable(bullets, Phaser.Physics.ARCADE);
+	CB1bullets = game.add.group();
+    CB1bullets.enableBody = true;
+	game.physics.arcade.enable(CB1bullets, Phaser.Physics.ARCADE);
 
     //bullets.physicsBodyType = Phaser.Physics.ARCADE;
 
-    bullets.createMultiple(50, 'Bullet');
-    bullets.setAll('checkWorldBounds', true);
-    bullets.setAll('outOfBoundsKill', true);
+    CB1bullets.createMultiple(50, 'Bullet');
+    CB1bullets.setAll('checkWorldBounds', true);
+    CB1bullets.setAll('outOfBoundsKill', true);
 	//bullets.body.allowRotation = true;
+	
+	CB2bullets = game.add.group();
+    CB2bullets.enableBody = true;
+	game.physics.arcade.enable(CB2bullets, Phaser.Physics.ARCADE);
+
+    //bullets.physicsBodyType = Phaser.Physics.ARCADE;
+
+    CB2bullets.createMultiple(50, 'Bullet');
+    CB2bullets.setAll('checkWorldBounds', true);
+    CB2bullets.setAll('outOfBoundsKill', true);
 
 	//================ Cowboy 1 =====================
 	CB1 = game.add.sprite(100, 100, 'CB1');
@@ -107,7 +123,7 @@ function create() {
 	CB2.body.collideWorldBounds = true;
 
     CB2.body.setCircle(30);
-	CB2Pad.addCallbacks(this, { onConnect: CB1addButtons });
+	CB2Pad.addCallbacks(this, { onConnect: CB2addButtons });
 
   // Add sfx
   foot = game.add.audio('foot');
@@ -185,11 +201,12 @@ function update() {
 		CB2.angle =
 			fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
 	}
-	game.physics.arcade.overlap(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this);
-	game.physics.arcade.overlap(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this);
-
-	game.physics.arcade.collide(ammos, CB1, function(CB1, ammo){ammo.kill();  reload.play(); bulletnum=bulletnum+1;  }, null, this);
-   /* if (game.input.activePointer.isDown && bulletnum > 0)
+	game.physics.arcade.overlap(CB1bullets, rock, function(rock, CB1bullet){CB1bullet.kill(); }, null, this);
+	game.physics.arcade.overlap(CB1bullets, CB2, function(CB2, CB1bullet){CB1bullet.kill(); }, null, this);
+	game.physics.arcade.overlap(CB2bullets, CB1, function(CB1, CB2bullet){CB2bullet.kill(); }, null, this);
+game.physics.arcade.collide(ammos, CB2, function(CB2, ammo){ammo.kill();  reload.play(); CB2bulletnum++;  }, null, this);
+	game.physics.arcade.collide(ammos, CB1, function(CB1, ammo){ammo.kill();  reload.play(); CB1bulletnum++;  }, null, this);
+   /* if (game.input.activePointer.isDown && CB2bulletnum > 0)
     {
         fire();
     }*/
@@ -239,35 +256,35 @@ function CB2addButtons() {
 
 function fixRotation(rotation) {  return rotation + 1.57079633;}
 
-function pickHandler (obj1, obj2) {
+/*function pickHandler (obj1, obj2) {
 
 
-    bulletnum=bulletnum+1;
+    CB2bulletnum=CB2bulletnum+1;
     reload.play();
 
 
 	ammos.remove(ammo);
 
-}
+}*/
 function hitHandler (obj1, obj2){
 	game.stage.backgroundColor = '#992d2d';
 	//destorysprite(obj1);
 }
 function CB1fire() {
 
-    if (game.time.now > nextFire && bullets.countDead() > 0)
+    if (game.time.now > nextFire && CB1bullets.countDead() > 0)
     {
         nextFire = game.time.now + fireRate;
 
 
-        var bullet = bullets.getFirstDead();
-        bullet.reset(CB1.x, CB1.y);
-		bullet.anchor.set(0.5,0.5);
-		bullet.rotation = CB1.rotation;
-		bullet.body.setSize(13, 13, 8, 5);
-		bullet.body.setCircle(9);
-        game.physics.arcade.velocityFromRotation(CB1.rotation -1.57079633, 2000, bullet.body.velocity);
-		bulletnum = bulletnum-1;
+        var CB1bullet = CB1bullets.getFirstDead();
+        
+		CB1bullet.body.setSize(13, 13, 8, 5);
+		CB1bullet.body.setCircle(9);
+		CB1bullet.reset(CB1.x, CB1.y);
+		CB1bullet.rotation = CB1.rotation;
+        game.physics.arcade.velocityFromRotation(CB1.rotation -1.57079633, 2000, CB1bullet.body.velocity);
+		CB1bulletnum = CB1bulletnum-1;
 		bulgenloc();
 
     shoot.play();
@@ -276,17 +293,17 @@ function CB1fire() {
 
 function CB2fire() {
 
-    if (game.time.now > nextFire && bullets.countDead() > 0)
+    if (game.time.now > nextFire && CB2bullets.countDead() > 0)
     {
         nextFire = game.time.now + fireRate;
 bulgenloc();
-        var bullet = bullets.getFirstDead();
-		bullet.body.setSize(13, 13, 8, 5);
-		bullet.body.setCircle(9);
-        bullet.reset(CB2.x, CB2.y);
-		bullet.rotation = CB2.rotation;
-        //game.physics.arcade.velocityFromRotation(CB2.rotation-1.57079633, 2000, bullet.body.velocity);
-		bulletnum = bulletnum-1;
+        var CB2bullet = CB2bullets.getFirstDead();
+		CB2bullet.body.setSize(13, 13, 8, 5);
+		CB2bullet.body.setCircle(9);
+        CB2bullet.reset(CB2.x, CB2.y);
+		CB2bullet.rotation = CB2.rotation;
+        game.physics.arcade.velocityFromRotation(CB2.rotation-1.57079633, 2000, CB2bullet.body.velocity);
+		CB2bulletnum = CB2bulletnum-1;
 
     shoot.play();
     }
@@ -309,10 +326,10 @@ function destroySprite (sprite) {
 
 function render() {
 
-    game.debug.text('Active Bullets: ' + bulletnum + ' / ' + bullets.total, 32, 32);
+    game.debug.text('Active Bullets: ' + CB2bulletnum + ' / ' + CB1bullets.total, 32, 32);
 	game.debug.text('' + bsx + '/' + bsy, 45, 45);
     game.debug.spriteInfo(CB1, 32, 450);
-	bullets.forEachAlive(renderGroup, this);
+	CB1bullets.forEachAlive(renderGroup, this);
     ammos.forEachAlive(renderGroup, this);
 	game.debug.body(CB1);
 	game.debug.body(rock);
