@@ -93,7 +93,7 @@ function update() {
     }
 	
 
-	CB1.rotation = fixRotation(game.physics.arcade.angleToPointer(CB1));
+	//CB1.rotation = fixRotation(game.physics.arcade.angleToPointer(CB1));
 	game.physics.arcade.collide(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this); 
 	game.physics.arcade.collide(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this); 
 
