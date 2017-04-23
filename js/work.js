@@ -51,7 +51,7 @@ function create() {
 	
 	game.physics.arcade.enable(CB1, Phaser.Physics.ARCADE);
 	CB1Pad = game.input.gamepad.pad1;
-	
+	CB1Pad.addCallbacks(this, { onConnect: addButtons });
 	CB1.body.collideWorldBounds = true;
 
 	CB1.body.setCircle(30);
@@ -94,7 +94,7 @@ function update() {
     }
 	
 
-	CB1.rotation = fixRotation(game.physics.arcade.angleToPointer(CB1)); 
+
 
 	CB1rightStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB1rightStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
@@ -120,10 +120,34 @@ function update() {
 	game.physics.arcade.collide(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this);
 	
 	game.physics.arcade.collide(ammo, CB1, pickHandler, null, this);
-    if (game.input.activePointer.isDown && bulletnum > 0)
+   /* if (game.input.activePointer.isDown && bulletnum > 0)
     {
         fire();
-    }
+    }*/
+}
+function addButtons() {
+
+    /*leftTriggerButton = CB1Pad.getButton(Phaser.Gamepad.XBOX360_LEFT_TRIGGER);
+
+    leftTriggerButton.onDown.add(onLeftTrigger);
+    leftTriggerButton.onUp.add(onLeftTrigger);
+    leftTriggerButton.onFloat.add(onLeftTrigger);*/
+
+    rightTriggerButton = CB1Pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
+
+    rightTriggerButton.onDown.add(onRightTrigger);
+    rightTriggerButton.onUp.add(onRightTrigger);
+    rightTriggerButton.onFloat.add(onRightTrigger);
+
+}
+//function onLeftTrigger(button, value) {
+
+ 
+//}
+
+function onRightTrigger(buttonCode, value) {
+
+   fire();
 }
 
 function fixRotation(rotation) { return rotation + 1.57079633; }
@@ -163,7 +187,7 @@ function render() {
 
     game.debug.text('Active Bullets: ' + bulletnum + ' / ' + bullets.total, 32, 32);
     game.debug.spriteInfo(CB1, 32, 450);
-	//game.debug.body(Bullets);
+	//game.debug.body(Bullets.bullet);
     game.debug.body(ammo);
 	game.debug.body(CB1);
 	game.debug.body(rock);
