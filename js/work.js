@@ -93,9 +93,6 @@ function update() {
         CB1.body.velocity.y = SPEED * CB1leftStickY;
     }
 	
-
-
-
 	CB1rightStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB1rightStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
 	
