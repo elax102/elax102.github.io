@@ -99,9 +99,6 @@ function update() {
         CB1.body.velocity.y = SPEED * CB1leftStickY;
     }
 	
-
-
-
 	CB1rightStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB1rightStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
 	
@@ -166,9 +163,11 @@ function CB2addButtons() {
 
 
 
+
 	
 	
 function fixRotation(rotation) {  return rotation + 1.57079633;}
+
 function pickHandler (obj1, obj2) {
 
     bulletnum=bulletnum+1;
