@@ -23,9 +23,7 @@ var CB2
 var bullets
 
 function create() {
-	
-	
-	
+
 	cursors = game.input.keyboard.createCursorKeys();
 	//game.add.sprite(0,0, 200, 200, 'rock');
 	game.add.tileSprite(0, 0, 700, 700, 'background');
@@ -70,6 +68,7 @@ function create() {
 }
 
 function update() {
+	
 	//set Cowboy speed to zero at start of update
     CB1.body.velocity.x = 0; CB1.body.velocity.y = 0;
     CB2.body.velocity.x = 0; CB2.body.velocity.y = 0;
@@ -119,7 +118,6 @@ function update() {
 	
 	CB2.angle = fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
 	
-
 	game.physics.arcade.collide(ammo, CB1, pickHandler, null, this);
     if (game.input.activePointer.isDown && bulletnum > 0)
     {
@@ -154,14 +152,13 @@ function fire() {
         game.physics.arcade.moveToPointer(bullet, 2000);
 		bulletnum = bulletnum-1;
     }
-
 }
 
 function destroySprite (sprite) {
-
+	
     sprite.destroy();
-
 }
+
 function render() {
 
     game.debug.text('Active Bullets: ' + bulletnum + ' / ' + bullets.total, 32, 32);
