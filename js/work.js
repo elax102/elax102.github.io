@@ -94,9 +94,7 @@ function update() {
     }
 	
 
-	CB1.rotation = fixRotation(game.physics.arcade.angleToPointer(CB1));
-	game.physics.arcade.collide(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this); 
-	game.physics.arcade.collide(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this); 
+	CB1.rotation = fixRotation(game.physics.arcade.angleToPointer(CB1)); 
 
 	CB1rightStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB1rightStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
@@ -117,6 +115,9 @@ function update() {
 	CB2rightStickY = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
 	
 	CB2.angle = fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
+	
+	game.physics.arcade.collide(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this); 
+	game.physics.arcade.collide(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this);
 	
 	game.physics.arcade.collide(ammo, CB1, pickHandler, null, this);
     if (game.input.activePointer.isDown && bulletnum > 0)
