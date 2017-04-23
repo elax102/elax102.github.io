@@ -31,7 +31,7 @@ function create() {
 	rock = game.add.sprite( 200, 200, 'rock');
 	game.physics.enable(rock, Phaser.Physics.ARCADE);
 	rock.body.immovable = true;
-	rock.body.collideWorldBounds = true;
+	rock.body.setCircle(30);
 	ammo=game.add.sprite(100, 300, 'Bullet');
 	game.physics.enable(ammo, Phaser.Physics.ARCADE);
 	
@@ -83,6 +83,7 @@ function update() {
 	//Mouse
 	//CB1.rotation = fixRotation(game.physics.arcade.angleToPointer(CB1));
 	
+	
 	//================= Collisions ====================
 	game.physics.arcade.collide(CB1,rock);
 
@@ -124,6 +125,7 @@ function update() {
     {
         fire();
     }*/
+	
 }
 function addButtons() {
 
