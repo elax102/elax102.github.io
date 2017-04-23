@@ -1,12 +1,9 @@
 
+var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+
 const SPEED = 300;
 const DEADZONE = 0.001;
 
-function preload() {
-//require('../index.html');
-
-
-var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 function preload () {
 	game.load.image('CB1', 'img/cowboy1.png');
 	game.load.image('CB2', 'img/cowboy2.png');
