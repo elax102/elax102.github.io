@@ -1,10 +1,11 @@
 
-var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render, setDeadZones: setDeadZones });
 
 
 const SPEED = 700;
 
-const DEADZONE = 0.01;
+const DEADZONE_LEFTJS = 0.25;
+const DEADZONE_RIGHTJS = 0.1;
 
 function preload () {
 	game.load.image('CB1', 'img/cowboy1.png');
@@ -49,6 +50,8 @@ function create() {
 	game.add.tileSprite(0, 0, 700, 700, 'background');
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	game.input.gamepad.start();
+	game.input.gamepad.pad1.deadZone = 0.01;
+	game.input.gamepad.pad2.deadZone = 0.01;
 
 	rock = game.add.sprite( 200, 200, 'rock');
 	game.physics.enable(rock, Phaser.Physics.ARCADE);
@@ -145,7 +148,9 @@ function update() {
 	CB1rightStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
 
 
-	if (Math.abs(CB1rightStickX) > DEADZONE || Math.abs(CB1rightStickY) > DEADZONE){
+	if (Math.abs(CB1rightStickX) > DEADZONE_RIGHTJS
+		|| Math.abs(CB1rightStickY) > DEADZONE_RIGHTJS){
+
 		CB1.angle =
 			fixRotation(Math.atan2(CB1rightStickY, CB1rightStickX)) * (180/Math.PI);
 	}
@@ -165,7 +170,8 @@ function update() {
 	CB2rightStickX = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB2rightStickY = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
 
-	if (Math.abs(CB2rightStickX) > DEADZONE || Math.abs(CB2rightStickY) > DEADZONE){
+	if (Math.abs(CB2rightStickX) > DEADZONE_RIGHTJS
+	|| Math.abs(CB2rightStickY) > DEADZONE_RIGHTJS){
 		CB2.angle =
 			fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
 	}
@@ -299,4 +305,8 @@ function render() {
 
 function renderGroup(member) {
 	game.debug.body(member);
+}
+
+function setDeadZones(Deadzone){
+	Deadzone = 0.5;
 }
