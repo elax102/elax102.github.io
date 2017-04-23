@@ -30,7 +30,6 @@ function preload () {
   var CB1bulletnum = 1;
   var CB2bulletnum = 1;
   
-  
 var bsx;
 var bsy;
   var CB1;
@@ -78,16 +77,10 @@ function create() {
 	crateV1 = game.add.sprite(342, 500, 'crate1x2'); scenary.add(crateV1);
 	
 	scenary.forEachExists(function(child){ child.body.immovable = true; }, this);
-	;
-
-	
 	
 	ammos = game.add.group();
     ammos.enableBody = true;
 	game.physics.arcade.enable(ammos, Phaser.Physics.ARCADE);
-
-  
-
     
     ammos.setAll('checkWorldBounds', true);
     ammos.setAll('outOfBoundsKill', true);
@@ -107,7 +100,6 @@ function create() {
 	game.physics.arcade.enable(CB2bullets, Phaser.Physics.ARCADE);
 
    
-
     CB2bullets.createMultiple(50, 'Bullet');
     CB2bullets.setAll('checkWorldBounds', true);
     CB2bullets.setAll('outOfBoundsKill', true);
@@ -240,8 +232,6 @@ function CB1addButtons() {
 
     rightTriggerButton = CB1Pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
     rightTriggerButton.onDown.add(CB1fire);
-
-
 }
 
 function CB2addButtons() {
@@ -254,12 +244,9 @@ function CB2addButtons() {
 
     rightTriggerButton = CB2Pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
     rightTriggerButton.onDown.add(CB2fire);
-
 }
 
 function fixRotation(rotation) {  return rotation + 1.57079633;}
-
-
 
 function CB1fire() {
 
