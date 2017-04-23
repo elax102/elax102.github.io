@@ -30,7 +30,9 @@ var bsy;
   var CB1;
   var CB2;
   var bullets;
-
+var ammos;
+  var ammo;
+  
   var foot;
   var bulletSpawn;
   var reload;
@@ -170,7 +172,7 @@ function update() {
 	game.physics.arcade.overlap(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this);
 	game.physics.arcade.overlap(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this);
 
-	game.physics.arcade.collide(ammo, CB1, pickHandler, null, this);
+	game.physics.arcade.collide(ammos, CB1, function(CB1, ammo){ammo.kill();  bulletnum=bulletnum+1;  }, null, this);
    /* if (game.input.activePointer.isDown && bulletnum > 0)
     {
         fire();
@@ -211,9 +213,9 @@ function fixRotation(rotation) {  return rotation + 1.57079633;}
 
 function pickHandler (obj1, obj2) {
 
-    bulletnum=bulletnum+1;
+    
 
-	destroySprite(ammo);
+	ammos.remove(ammo);
 
 }
 function hitHandler (obj1, obj2){
@@ -264,7 +266,9 @@ function bulgenloc ()
 var zone=genloc[game.rnd.integerInRange(0, 3)];
   bsx=game.rnd.integerInRange(zone.x1, zone.x2);
   bsy=game.rnd.integerInRange(zone.y1, zone.y2);
-ammos.create(bsx, bsy, 'Bullet');
+	ammo = ammos.create(bsx, bsy, 'Bullet');
+ammo.body.setSize(13, 13, 8, 5);
+		ammo.body.setCircle(9);
 }
 
 function destroySprite (sprite) {
@@ -278,7 +282,7 @@ function render() {
 	game.debug.text('' + bsx + '/' + bsy, 45, 45);
     game.debug.spriteInfo(CB1, 32, 450);
 	bullets.forEachAlive(renderGroup, this);
-    game.debug.body(ammo);
+    ammos.forEachAlive(renderGroup, this);
 	game.debug.body(CB1);
 	game.debug.body(rock);
 	game.debug.body(CB2);
