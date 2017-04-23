@@ -12,7 +12,7 @@ function preload () {
 	game.load.image('Bullet', 'img/bullet.png');
 	game.load.image('background', 'img/bg1-tiled.png');
 	game.load.image('rock', 'img/rock1.png');
-  
+
   game.load.audio('foot', 'sfx/foot.wav');
   game.load.audio('bulletspawn', 'sfx/bulletdrop.wav');
   game.load.audio('reload', 'sfx/reload.wav');
@@ -171,7 +171,6 @@ function CB1addButtons() {
     leftTriggerButton.onFloat.add(onLeftTrigger);*/
 
     rightTriggerButton = CB1Pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
-
     rightTriggerButton.onDown.add(CB1fire);
 
 
@@ -189,7 +188,6 @@ function CB2addButtons() {
     leftTriggerButton.onFloat.add(onLeftTrigger);*/
 
     rightTriggerButton = CB2Pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
-
     rightTriggerButton.onDown.add(CB2fire);
 
 }
@@ -222,6 +220,8 @@ function CB1fire() {
         game.physics.arcade.velocityFromRotation(CB1.rotation -1.57079633, 2000, bullet.body.velocity);
 		bulletnum = bulletnum-1;
 		bulgenloc();
+
+    shoot.play();
     }
 }
 
@@ -238,6 +238,8 @@ bulgenloc();
 		bullet.rotation = CB2.rotation;
         game.physics.arcade.velocityFromRotation(CB2.rotation-1.57079633, 2000, bullet.body.velocity);
 		bulletnum = bulletnum-1;
+
+    shoot.play();
     }
 }
 
