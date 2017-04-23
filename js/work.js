@@ -1,7 +1,7 @@
 
 var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
-const SPEED = 300;
+const SPEED = 700;
 const DEADZONE = 0.001;
 
 function preload () {
@@ -25,11 +25,13 @@ function create() {
 	
 	
 	cursors = game.input.keyboard.createCursorKeys();
-	
+	//game.add.sprite(0,0, 200, 200, 'rock');
 	game.add.tileSprite(0, 0, 700, 700, 'background');
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	game.input.gamepad.start();
-	
+	rock = game.add.sprite( 200, 200, 'rock');
+	game.physics.enable(rock, Phaser.Physics.ARCADE);
+	rock.body.immovable = true;
 	ammo=game.add.sprite(100, 300, 'Bullet');
 	game.physics.enable(ammo, Phaser.Physics.ARCADE);
 	
@@ -89,7 +91,8 @@ function update() {
     }
 	
 	CB1.rotation = fixRotation(game.physics.arcade.angleToPointer(CB1));
-	game.physics.arcade.collide(bullets, CB2, hitHandler, null, this);
+	game.physics.arcade.collide(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this); 
+	game.physics.arcade.collide(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this); 
 	game.physics.arcade.collide(ammo, CB1, pickHandler, null, this);
     if (game.input.activePointer.isDown && bulletnum > 0)
     {
@@ -139,5 +142,6 @@ function render() {
 	//game.debug.body(Bullets);
     game.debug.body(ammo);
 	game.debug.body(CB1);
+	game.debug.body(rock);
 	game.debug.body(CB2);
 }
