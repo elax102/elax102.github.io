@@ -25,13 +25,13 @@ var bullets
 function create() {
 
 	cursors = game.input.keyboard.createCursorKeys();
-	//game.add.sprite(0,0, 200, 200, 'rock');
 	game.add.tileSprite(0, 0, 700, 700, 'background');
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	game.input.gamepad.start();
 	rock = game.add.sprite( 200, 200, 'rock');
 	game.physics.enable(rock, Phaser.Physics.ARCADE);
 	rock.body.immovable = true;
+	rock.body.setCircle(30);
 	ammo=game.add.sprite(100, 300, 'Bullet');
 	game.physics.enable(ammo, Phaser.Physics.ARCADE);
 	
@@ -48,7 +48,6 @@ function create() {
 	//bullets.body.allowRotation = true;
 	
 	//================ Cowboy 1 =====================
-	
 	CB1 = game.add.sprite(100, 100, 'CB1');
 	CB1.anchor.set(0.5, 0.5);
 	
@@ -59,6 +58,7 @@ function create() {
 
 	CB1.body.setCircle(30);
 	CB1Pad.addCallbacks(this, { onConnect: CB1addButtons });
+	
 	//================ Cowboy 2 =====================
 	CB2 = game.add.sprite(300, 300, 'CB2');
 	CB2.anchor.set(0.5, 0.5);
@@ -80,14 +80,18 @@ function update() {
     CB2.body.velocity.x = 0; CB2.body.velocity.y = 0;
 	
 	//temporary movement with keyboard
-	if (cursors.up.isDown) { CB1.body.velocity.y = -150; }
-	else if (cursors.down.isDown) {CB1.body.velocity.y = 150; }
-    else if (cursors.left.isDown) { CB1.body.velocity.x = -150; }
-    else if (cursors.right.isDown) { CB1.body.velocity.x = 150; }
-    else {}
+	// if (cursors.up.isDown) { CB1.body.velocity.y = -150; }
+	// else if (cursors.down.isDown) {CB1.body.velocity.y = 150; }
+    // else if (cursors.left.isDown) { CB1.body.velocity.x = -150; }
+    // else if (cursors.right.isDown) { CB1.body.velocity.x = 150; }
+    // else {}
 	
 	//Mouse
 	//CB1.rotation = fixRotation(game.physics.arcade.angleToPointer(CB1));
+	
+	
+	//================= Collisions ====================
+	game.physics.arcade.collide(CB1,rock);
 
 	//============== Cowboy 1 Gamepad =================
 	CB1leftStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
@@ -127,6 +131,7 @@ function update() {
     {
         fire();
     }*/
+	
 }
 function CB1addButtons() {
 
@@ -157,15 +162,9 @@ function CB2addButtons() {
     rightTriggerButton = CB2Pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
 
     rightTriggerButton.onDown.add(CB2fire);
-    
 
 }
 
-
-
-
-	
-	
 function fixRotation(rotation) {  return rotation + 1.57079633;}
 
 function pickHandler (obj1, obj2) {
