@@ -15,10 +15,11 @@ function preload () {
 	game.load.image('rock', 'img/rock1.png');
 
   game.load.audio('foot', 'sfx/foot.wav');
+  game.load.audio('foot2', 'sfx/foot2.mp3');
   game.load.audio('bulletspawn', 'sfx/bulletdrop.wav');
   game.load.audio('reload', 'sfx/reload.wav');
   game.load.audio('shoot', 'sfx/gunshot.mp3');
-  game.load.audio('dead', 'whilhelm-scream.wav');
+  game.load.audio('dead', 'sfx/wilhelm-scream.wav');
 }
 
   var genloc = [{x1:0,x2:350,y1:0,y2:350}, {x1:0,x2:350,y1:350,y2:700}, {x1:350,x2:700,y1:0,y2:350}, {x1:350,x2:700,y1:350,y2:700} ];
@@ -39,7 +40,14 @@ var ammos;
   var shoot;
   var dead;
 
+  var cb1walking = false;
+  var cb2walking = false;
+  var timer;
+
 function create() {
+  timer = game.time.create(false);
+  timer.loop(200, walkTimer, this);
+  timer.start();
 
 	cursors = game.input.keyboard.createCursorKeys();
 	game.add.tileSprite(0, 0, 700, 700, 'background');
@@ -103,6 +111,7 @@ function create() {
 
   // Add sfx
   foot = game.add.audio('foot');
+  foot2 = game.add.audio('foot2');
   bulletSpawn = game.add.audio('bulletspawn');
   reload = game.add.audio('reload');
   shoot = game.add.audio('shoot');
@@ -133,20 +142,25 @@ function update() {
 	CB1leftStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
 	CB1leftStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
 
-	if (Math.abs(CB1leftStickX) > DEADZONE_LEFTJS) {
+	if (Math.abs(CB1leftStickX) > DEADZONE_LEFTJS || Math.abs(CB1leftStickY) > DEADZONE_LEFTJS) {
         CB1.body.velocity.x = SPEED * CB1leftStickX;
-    }
-    if (Math.abs(CB1leftStickY) > DEADZONE_LEFTJS) {
         CB1.body.velocity.y = SPEED * CB1leftStickY;
+
+        cb1walking = true;
+    }else {
+      cb1walking = false;
     }
-	
+    // if (Math.abs(CB1leftStickY) > DEADZONE) {
+    //     CB1.body.velocity.y = SPEED * CB1leftStickY;
+    // }
+
 	CB1rightStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB1rightStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
 
 
-	if (Math.abs(CB1rightStickX) > DEADZONE_RIGHTJS 
+	if (Math.abs(CB1rightStickX) > DEADZONE_RIGHTJS
 		|| Math.abs(CB1rightStickY) > DEADZONE_RIGHTJS){
-		
+
 		CB1.angle =
 			fixRotation(Math.atan2(CB1rightStickY, CB1rightStickX)) * (180/Math.PI);
 	}
@@ -154,17 +168,19 @@ function update() {
 	//============== Cowboy 2 Gamepad =================
 	CB2leftStickX = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
 	CB2leftStickY = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
-	if (Math.abs(CB2leftStickX) > DEADZONE_LEFTJS) {
+	if (Math.abs(CB2leftStickX) > DEADZONE_LEFTJS || Math.abs(CB2leftStickY) > DEADZONE_LEFTJS) {
         CB2.body.velocity.x = SPEED * CB2leftStickX;
-    }
-    if (Math.abs(CB2leftStickY) > DEADZONE_LEFTJS) {
         CB2.body.velocity.y = SPEED * CB2leftStickY;
+
+        cb2walking = true;
+    }else {
+      cb2walking = false;
     }
 
 	CB2rightStickX = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
 	CB2rightStickY = CB2Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
 
-	if (Math.abs(CB2rightStickX) > DEADZONE_RIGHTJS 
+	if (Math.abs(CB2rightStickX) > DEADZONE_RIGHTJS
 	|| Math.abs(CB2rightStickY) > DEADZONE_RIGHTJS){
 		CB2.angle =
 			fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
@@ -172,13 +188,25 @@ function update() {
 	game.physics.arcade.overlap(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this);
 	game.physics.arcade.overlap(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this);
 
-	game.physics.arcade.collide(ammos, CB1, function(CB1, ammo){ammo.kill();  bulletnum=bulletnum+1;  }, null, this);
+	game.physics.arcade.collide(ammos, CB1, function(CB1, ammo){ammo.kill();  reload.play(); bulletnum=bulletnum+1;  }, null, this);
    /* if (game.input.activePointer.isDown && bulletnum > 0)
     {
         fire();
     }*/
 
 }
+
+function walkTimer(){
+  if(cb1walking == true){
+    foot.play();
+    foot.volume = 0.5;
+  }
+  if(cb2walking == true){
+    foot2.play();
+    foot2.volume = 0.5;
+  }
+}
+
 function CB1addButtons() {
 
     /*leftTriggerButton = CB1Pad.getButton(Phaser.Gamepad.XBOX360_LEFT_TRIGGER);
@@ -213,7 +241,10 @@ function fixRotation(rotation) {  return rotation + 1.57079633;}
 
 function pickHandler (obj1, obj2) {
 
-    
+
+    bulletnum=bulletnum+1;
+    reload.play();
+
 
 	ammos.remove(ammo);
 
