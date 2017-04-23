@@ -22,6 +22,7 @@ function preload () {
   game.load.audio('reload', 'sfx/reload.wav');
   game.load.audio('shoot', 'sfx/gunshot.mp3');
   game.load.audio('dead', 'sfx/wilhelm-scream.wav');
+  game.load.audio('thunk', 'sfx/thunk.wav');
 }
 
   var genloc = [{x1:0,x2:350,y1:0,y2:350}, {x1:0,x2:350,y1:350,y2:700}, {x1:350,x2:700,y1:0,y2:350}, {x1:350,x2:700,y1:350,y2:700} ];
@@ -29,7 +30,7 @@ function preload () {
   var nextFire = 0;
   var CB1bulletnum = 1;
   var CB2bulletnum = 1;
-  
+
 var bsx;
 var bsy;
   var CB1;
@@ -40,7 +41,7 @@ var bsy;
   var CB2bullet;
 var ammos;
   var ammo;
-  
+
   var foot;
   var bulletSpawn;
   var reload;
@@ -67,7 +68,7 @@ function create() {
 	scenary = game.add.group();
 	scenary.enableBody = true;
 	game.physics.enable(scenary, Phaser.Physics.ARCADE);
-	
+
 	rock1 = game.add.sprite(200, 200, 'rock'); scenary.add(rock1);
 	rock2 = game.add.sprite(400, 500, 'rock'); scenary.add(rock2);
 	rock3 = game.add.sprite(500, 300, 'rock'); scenary.add(rock3);
@@ -75,13 +76,13 @@ function create() {
 	crateH1 = game.add.sprite(580, 120, 'crate2x1'); scenary.add(crateH1);
 	crateH2 = game.add.sprite(120, 262, 'crate2x1'); scenary.add(crateH2);
 	crateV1 = game.add.sprite(342, 500, 'crate1x2'); scenary.add(crateV1);
-	
+
 	scenary.forEachExists(function(child){ child.body.immovable = true; }, this);
-	
+
 	ammos = game.add.group();
     ammos.enableBody = true;
 	game.physics.arcade.enable(ammos, Phaser.Physics.ARCADE);
-    
+
     ammos.setAll('checkWorldBounds', true);
     ammos.setAll('outOfBoundsKill', true);
 
@@ -93,13 +94,13 @@ function create() {
     CB1bullets.createMultiple(50, 'Bullet');
     CB1bullets.setAll('checkWorldBounds', true);
     CB1bullets.setAll('outOfBoundsKill', true);
-	
-	
+
+
 	CB2bullets = game.add.group();
     CB2bullets.enableBody = true;
 	game.physics.arcade.enable(CB2bullets, Phaser.Physics.ARCADE);
 
-   
+
     CB2bullets.createMultiple(50, 'Bullet');
     CB2bullets.setAll('checkWorldBounds', true);
     CB2bullets.setAll('outOfBoundsKill', true);
@@ -137,6 +138,7 @@ function create() {
   reload = game.add.audio('reload');
   shoot = game.add.audio('shoot');
   dead = game.add.audio('dead');
+  thunk = game.add.audio('thunk');
 }
 
 function update() {
