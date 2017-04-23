@@ -203,10 +203,6 @@ function update() {
 	//game.physics.arcade.overlap(bullets, CB1, function(bulletNcb){ bulletNcb.kill(); });
 	game.physics.arcade.collide(ammos, CB1, function(CB1, ammo){ 
 		ammo.kill(); reload.play(); bulletnum++; });
-	// game.physics.arcade.overlap(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this);
-	// game.physics.arcade.overlap(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this);
-
-	// game.physics.arcade.collide(ammos, CB1, function(CB1, ammo){ammo.kill();  reload.play(); bulletnum=bulletnum+1;  }, null, this);
 	
    /* if (game.input.activePointer.isDown && bulletnum > 0)
     {
