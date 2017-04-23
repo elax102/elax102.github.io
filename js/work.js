@@ -206,10 +206,10 @@ function update() {
 //======================= Collisions ==========================
 	game.physics.arcade.collide(CB1,scenary);
 	game.physics.arcade.collide(CB2,scenary);
-	game.physics.arcade.overlap(CB1bullets, scenary, function(CB1bullet){ CB1bullet.kill(); });
-	game.physics.arcade.overlap(CB2bullets, scenary, function(CB2bullet){ CB2bullet.kill(); });
-	game.physics.arcade.overlap(CB1bullets, CB2, function(CB1bulletAndCB2){CB1bulletAndCB2.kill(); });
-	game.physics.arcade.overlap(CB2bullets, CB1, function(CB2bulletAndCB1){CB2bulletAndCB1.kill(); });
+	game.physics.arcade.overlap(CB1bullets, scenary, function(CB1bullet){ CB1bullet.kill(), thunk.play(); });
+	game.physics.arcade.overlap(CB2bullets, scenary, function(CB2bullet){ CB2bullet.kill(), thunk.play(); });
+	game.physics.arcade.overlap(CB1bullets, CB2, function(CB1bulletAndCB2){CB1bulletAndCB2.kill(), dead.play(); });
+	game.physics.arcade.overlap(CB2bullets, CB1, function(CB2bulletAndCB1){CB2bulletAndCB1.kill(), dead.play(); });
 	game.physics.arcade.collide(ammos, CB2, function(CB2, ammo){ammo.kill();  reload.play(); CB2bulletnum++;  });
 	game.physics.arcade.collide(ammos, CB1, function(CB1, ammo){ammo.kill();  reload.play(); CB1bulletnum++;  });
 }
