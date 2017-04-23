@@ -13,7 +13,7 @@ function preload () {
 	game.load.image('background', 'img/bg1-tiled.png');
 game.load.image('rock', 'img/rock1.png');}
 
-
+var genloc = [{x1:0,x2:350,y1:0,Y2:350}, {x1:0,x2:350,y1:350,Y2:700}, {x1:350,x2:700,y1:0,Y2:350}, {x1:350,x2:700,y1:350,Y2:700} ];
 var fireRate = 1000;
 var nextFire = 0;
 var bulletnum = 1;
@@ -193,6 +193,7 @@ function CB1fire() {
 		bullet.rotation = CB1.rotation;
         game.physics.arcade.velocityFromRotation(CB1.rotation -1.57079633, 2000, bullet.body.velocity);
 		bulletnum = bulletnum-1;
+		bulgenloc();
     }
 }
 
@@ -201,7 +202,7 @@ function CB2fire() {
     if (game.time.now > nextFire && bullets.countDead() > 0)
     {
         nextFire = game.time.now + fireRate;
-
+bulgenloc();
         var bullet = bullets.getFirstDead();
 		bullet.body.setSize(13, 13, 8, 5);
 	bullet.body.setCircle(9);
@@ -210,6 +211,14 @@ function CB2fire() {
         game.physics.arcade.velocityFromRotation(CB2.rotation-1.57079633, 2000, bullet.body.velocity);
 		bulletnum = bulletnum-1;
     }
+}
+
+function bulgenloc ()
+{
+var zone=genloc[game.rnd.integerInRange(0, 3)];
+ var x=game.rnd.integerInRange(zone.x1, zone.x2);
+ var y=game.rnd.integerInRange(zone.y1, zone.y2);
+ ammo = game.add.sprite(x, y, 'Bullet');
 }
 
 function destroySprite (sprite) {
