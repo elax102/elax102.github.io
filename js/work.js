@@ -73,9 +73,11 @@ function create() {
 	rock2 = game.add.sprite(400, 500, 'rock'); scenary.add(rock2);
 	rock3 = game.add.sprite(500, 300, 'rock'); scenary.add(rock3);
 	rock4 = game.add.sprite(100, 570, 'rock'); scenary.add(rock4);
+	//H = horizontal, V = vertical
 	crateH1 = game.add.sprite(580, 120, 'crate2x1'); scenary.add(crateH1);
 	crateH2 = game.add.sprite(120, 262, 'crate2x1'); scenary.add(crateH2);
 	crateV1 = game.add.sprite(342, 500, 'crate1x2'); scenary.add(crateV1);
+	crateV2 = game.add.sprite(370, 110, 'crate1x2'); scenary.add(crateV2);
 
 	scenary.forEachExists(function(child){ child.body.immovable = true; }, this);
 
