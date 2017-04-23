@@ -1,7 +1,9 @@
 
 var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
+
 const SPEED = 700;
+
 const DEADZONE = 0.001;
 
 function preload () {
@@ -81,18 +83,30 @@ function update() {
     else if (cursors.right.isDown) { CB1.body.velocity.x = 150; }
     else {}
 
-	leftStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
-	leftStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
-	if (leftStickX < -DEADZONE || leftStickX > DEADZONE) {
-        CB1.body.velocity.x = SPEED * leftStickX;
+	CB1leftStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
+	CB1leftStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
+	if (CB1leftStickX < -DEADZONE || CB1leftStickX > DEADZONE) {
+        CB1.body.velocity.x = SPEED * CB1leftStickX;
     }
-    if (leftStickY < -DEADZONE || leftStickY > DEADZONE) {
-        CB1.body.velocity.y = SPEED * leftStickY;
+    if (CB1leftStickY < -DEADZONE || CB1leftStickY > DEADZONE) {
+        CB1.body.velocity.y = SPEED * CB1leftStickY;
     }
 	
+
 	CB1.rotation = fixRotation(game.physics.arcade.angleToPointer(CB1));
 	game.physics.arcade.collide(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this); 
 	game.physics.arcade.collide(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this); 
+
+	CB1rightStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_X);
+	CB1rightStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y);
+	
+	//Gamepad
+	CB1.angle = fixRotation(Math.atan2(CB1rightStickY, CB1rightStickX)) * (180/Math.PI);
+	
+	//Mouse
+	//CB1.rotation = fixRotation(game.physics.arcade.angleToPointer(CB1));
+	
+
 	game.physics.arcade.collide(ammo, CB1, pickHandler, null, this);
     if (game.input.activePointer.isDown && bulletnum > 0)
     {
