@@ -102,10 +102,10 @@ function update() {
 	//============== Cowboy 1 Gamepad =================
 	CB1leftStickX = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
 	CB1leftStickY = CB1Pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
-	if (CB1leftStickX < -DEADZONE || CB1leftStickX > DEADZONE) {
+	if (Math.abs(CB1leftStickX) > DEADZONE) {
         CB1.body.velocity.x = SPEED * CB1leftStickX;
     }
-    if (CB1leftStickY < -DEADZONE || CB1leftStickY > DEADZONE) {
+    if (Math.abs(CB1leftStickY) > DEADZONE) {
         CB1.body.velocity.y = SPEED * CB1leftStickY;
     }
 	
@@ -197,10 +197,11 @@ function CB1fire() {
 		
 
         var bullet = bullets.getFirstDead();
+        bullet.reset(CB1.x, CB1.y);
+		bullet.anchor.set(0.5,0.5);
+		bullet.rotation = CB1.rotation;
 		bullet.body.setSize(13, 13, 8, 5);
 		bullet.body.setCircle(9);
-        bullet.reset(CB1.x, CB1.y);
-		bullet.rotation = CB1.rotation;
         game.physics.arcade.velocityFromRotation(CB1.rotation -1.57079633, 2000, bullet.body.velocity);
 		bulletnum = bulletnum-1;
 		bulgenloc();
@@ -215,10 +216,10 @@ function CB2fire() {
 bulgenloc();
         var bullet = bullets.getFirstDead();
 		bullet.body.setSize(13, 13, 8, 5);
-	bullet.body.setCircle(9);
+		bullet.body.setCircle(9);
         bullet.reset(CB2.x, CB2.y);
 		bullet.rotation = CB2.rotation;
-        game.physics.arcade.velocityFromRotation(CB2.rotation-1.57079633, 2000, bullet.body.velocity);
+        //game.physics.arcade.velocityFromRotation(CB2.rotation-1.57079633, 2000, bullet.body.velocity);
 		bulletnum = bulletnum-1;
     }
 }
