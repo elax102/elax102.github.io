@@ -28,18 +28,22 @@ function create() {
 	game.add.tileSprite(0, 0, 700, 700, 'background');
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	game.input.gamepad.start();
+	
 	rock = game.add.sprite( 200, 200, 'rock');
 	game.physics.enable(rock, Phaser.Physics.ARCADE);
 	rock.body.immovable = true;
-	rock.body.setCircle(30);
+	rock.body.setSize(58,58,2,2);
+	
 	ammo=game.add.sprite(100, 300, 'Bullet');
 	game.physics.enable(ammo, Phaser.Physics.ARCADE);
-	
 	ammo.body.setSize(13, 13, 8, 5);
 	ammo.body.setCircle(9);
+	
 	bullets = game.add.group();
     bullets.enableBody = true;
-    bullets.physicsBodyType = Phaser.Physics.ARCADE;
+	game.physics.arcade.enable(bullets, Phaser.Physics.ARCADE);
+	
+    //bullets.physicsBodyType = Phaser.Physics.ARCADE;
 	
 	
     bullets.createMultiple(50, 'Bullet');
@@ -56,11 +60,12 @@ function create() {
 	
 	CB1.body.collideWorldBounds = true;
 
-	CB1.body.setCircle(30);
+	CB1.body.setSize(58,58,3,3);
+	CB1.body.allowRotation = true;
 	CB1Pad.addCallbacks(this, { onConnect: CB1addButtons });
 	
 	//================ Cowboy 2 =====================
-	CB2 = game.add.sprite(300, 300, 'CB2');
+	CB2 = game.add.sprite(800, 800, 'CB2');
 	CB2.anchor.set(0.5, 0.5);
 	
 	game.physics.arcade.enable(CB2, Phaser.Physics.ARCADE);
@@ -123,8 +128,8 @@ function update() {
 	
 	CB2.angle = fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
 	
-	game.physics.arcade.collide(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this); 
-	game.physics.arcade.collide(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this);
+	game.physics.arcade.overlap(bullets, rock, function(rock, bullet){bullet.kill(); }, null, this); 
+	game.physics.arcade.overlap(bullets, CB2, function(CB2, bullet){bullet.kill(); }, null, this);
 	
 	game.physics.arcade.collide(ammo, CB1, pickHandler, null, this);
    /* if (game.input.activePointer.isDown && bulletnum > 0)
@@ -187,7 +192,7 @@ function CB1fire() {
 
         var bullet = bullets.getFirstDead();
 		bullet.body.setSize(13, 13, 8, 5);
-	bullet.body.setCircle(9);
+		bullet.body.setCircle(9);
         bullet.reset(CB1.x, CB1.y);
 		bullet.rotation = CB1.rotation;
         game.physics.arcade.velocityFromRotation(CB1.rotation -1.57079633, 2000, bullet.body.velocity);
