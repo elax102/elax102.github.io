@@ -21,11 +21,12 @@ function preload () {
   game.load.audio('dead', 'whilhelm-scream.wav');
 }
 
-  var genloc = [{x1:0,x2:350,y1:0,Y2:350}, {x1:0,x2:350,y1:350,Y2:700}, {x1:350,x2:700,y1:0,Y2:350}, {x1:350,x2:700,y1:350,Y2:700} ];
+  var genloc = [{x1:0,x2:350,y1:0,y2:350}, {x1:0,x2:350,y1:350,y2:700}, {x1:350,x2:700,y1:0,y2:350}, {x1:350,x2:700,y1:350,y2:700} ];
   var fireRate = 1000;
   var nextFire = 0;
   var bulletnum = 1;
-
+var bsx;
+var bsy;
   var CB1;
   var CB2;
   var bullets;
@@ -50,10 +51,17 @@ function create() {
 	rock.body.immovable = true;
 	rock.body.setSize(58,58,2,2);
 
-	ammo=game.add.sprite(100, 300, 'Bullet');
-	game.physics.enable(ammo, Phaser.Physics.ARCADE);
-	ammo.body.setSize(13, 13, 8, 5);
-	ammo.body.setCircle(9);
+	
+	
+	ammos = game.add.group();
+    ammos.enableBody = true;
+	game.physics.arcade.enable(ammos, Phaser.Physics.ARCADE);
+
+    //bullets.physicsBodyType = Phaser.Physics.ARCADE;
+
+    
+    ammos.setAll('checkWorldBounds', true);
+    ammos.setAll('outOfBoundsKill', true);
 
 	bullets = game.add.group();
     bullets.enableBody = true;
@@ -254,9 +262,9 @@ bulgenloc();
 function bulgenloc ()
 {
 var zone=genloc[game.rnd.integerInRange(0, 3)];
- var x=game.rnd.integerInRange(zone.x1, zone.x2);
- var y=game.rnd.integerInRange(zone.y1, zone.y2);
- ammo = game.add.sprite(x, y, 'Bullet');
+  bsx=game.rnd.integerInRange(zone.x1, zone.x2);
+  bsy=game.rnd.integerInRange(zone.y1, zone.y2);
+ammos.create(bsx, bsy, 'Bullet');
 }
 
 function destroySprite (sprite) {
@@ -267,6 +275,7 @@ function destroySprite (sprite) {
 function render() {
 
     game.debug.text('Active Bullets: ' + bulletnum + ' / ' + bullets.total, 32, 32);
+	game.debug.text('' + bsx + '/' + bsy, 45, 45);
     game.debug.spriteInfo(CB1, 32, 450);
 	bullets.forEachAlive(renderGroup, this);
     game.debug.body(ammo);
