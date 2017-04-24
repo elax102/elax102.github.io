@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render, setDeadZones: setDeadZones });
+var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render});
 
 
 const SPEED = 700;
@@ -348,8 +348,4 @@ function render() {
 
 function renderGroup(member) {
 	game.debug.body(member);
-}
-
-function setDeadZones(Deadzone){
-	Deadzone = 0.5;
 }
