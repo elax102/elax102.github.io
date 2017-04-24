@@ -6,7 +6,7 @@ const SPEED = 700;
 const DEADZONE_LEFTJS = 0.25;
 const DEADZONE_RIGHTJS = 0.1;
 
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 
 function preload () {
 	//Images
@@ -59,6 +59,7 @@ var ammos;
   var cb1walking = false;
   var cb2walking = false;
   var timer;
+  var ResetTimer;
   var bulgentime;
   
 function create() {
@@ -79,6 +80,13 @@ function create() {
 	
 	CB1mag = game.add.sprite(0, 0, 'Bullet');
 	CB2mag = game.add.sprite(660, 0, 'Bullet');
+	
+	CB1WinText = game.add.text(380, 350, 'Cowboy Red wins!'); 
+	CB1WinText.anchor.set(0.5); CB1WinText.visible = false;
+	CB2WinText = game.add.text(380, 350, 'Cowboy Blue wins!'); 
+	CB2WinText.anchor.set(0.5); CB2WinText.visible = false;
+	
+    
 	//groups
 	scenery = game.add.group();
 	scenery.enableBody = true;
@@ -246,15 +254,25 @@ ammos.forEach(function(ammo) { ammo.body.angularVelocity = 200;});
 	if(CB2bulletnum == 1){
 		CB2mag.visible = true;
 	}
-	//Reset condition
+	//================== Reset ==================
 	if(!CB1.alive || !CB2.alive){
-		CB1.reset(100,100);
-		CB2.reset(600,600);
-		CB1bulletnum = 1;
-		CB2bulletnum = 1;
+		
+		if(CB1.alive){ CB1WinText.visible = true; }
+		else{ CB2WinText.visible = true; }
+		CB1.alive = true; CB2.alive = true;
+		game.time.events.add(3000, ResetGame, this);
 	}
-	}
+}
 
+function ResetGame() {
+	CB1.reset(100,100);
+	CB2.reset(600,600);
+	CB1bulletnum = 1;
+	CB2bulletnum = 1;
+	CB1WinText.visible = false;
+	CB2WinText.visible = false;
+}
+	
 function walkTimer(){
   if(cb1walking == true && CB1.alive){
     foot.play();
