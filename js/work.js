@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render, setDeadZones: setDeadZones });
+var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render});
 
 
 const SPEED = 700;
@@ -28,7 +28,10 @@ function preload () {
 	game.load.audio('thunk', 'sfx/thunk.wav');
 }
 
-  var genloc = [{x1:0,x2:350,y1:0,y2:350}, {x1:0,x2:350,y1:350,y2:700}, {x1:350,x2:700,y1:0,y2:350}, {x1:350,x2:700,y1:350,y2:700} ];
+  var genloc = [{x1:29,x2:332,y1:29,y2:167}, {x1:463,x2:551,y1:29,y2:251}, {x1:293,x2:471,y1:254,y2:471}, 
+	{x1:29,x2:313,y1:355,y2:505}, {x1:493,x2:671,y1:393,y2:671}, {x1:230,x2:313,y1:497,y2:671},
+	{x1:463,x2:671,y1:213,y2:251}, {x1:29,x2:671,y1:668,y2:671}, {x1:29,x2:671,y1:29,y2:107},
+	{x1:29,x2:671,y1:406,y2:471} ];
  // var fireRate = 1000;
   var nextFire = 0;
   var CB1bulletnum = 1;
@@ -55,6 +58,7 @@ var ammos;
   var cb2walking = false;
   var timer;
   var bulgentime;
+  
 function create() {
   timer = game.time.create(false);
   timer.loop(200, walkTimer, this);
@@ -315,7 +319,7 @@ function bulgenloc ()
 	if(ammos.total > 0){
 		ammo.kill();
 	}
-var zone=genloc[game.rnd.integerInRange(0, 3)];
+var zone=genloc[game.rnd.integerInRange(0, 9)];
   bsx=game.rnd.integerInRange(zone.x1, zone.x2);
   bsy=game.rnd.integerInRange(zone.y1, zone.y2);
 	ammo = ammos.create(bsx, bsy, 'Bullet');
@@ -348,8 +352,4 @@ function render() {
 
 function renderGroup(member) {
 	game.debug.body(member);
-}
-
-function setDeadZones(Deadzone){
-	Deadzone = 0.5;
 }
