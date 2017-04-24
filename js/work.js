@@ -233,6 +233,13 @@ function update() {
 	if(CB1bulletnum == 0){
 	game.physics.arcade.collide(ammos, CB1, function(CB1, ammo){ammo.kill();  reload.play(); CB1bulletnum++;  });
 	}
+	//Reset condition
+	if(!CB1.alive || !CB2.alive){
+		CB1.reset(100,100);
+		CB2.reset(600,600);
+		CB1bulletnum = 1;
+		CB2bulletnum = 1;
+	}
 	}
 
 function walkTimer(){
@@ -244,6 +251,7 @@ function walkTimer(){
     foot2.play();
     foot2.volume = 0.5;
   }
+  
 }
 
 function CB1addButtons() {
@@ -339,7 +347,8 @@ function render() {
 
 		game.debug.text('Active Bullets: ' + CB1bulletnum, 32, 32);
 		game.debug.text('Active Bullets: ' + CB2bulletnum, 300, 32);
-		game.debug.text('' + bsx + '/' + bsy, 45, 45);
+		game.debug.text('Bullet Spawn: ' + bsx + '/' + bsy, 32, 48);
+		game.debug.text('Reset? ' + !CB2.alive, 32, 64);
 		game.debug.spriteInfo(CB1, 32, 450);
 		CB1bullets.forEachAlive(renderGroup, this);
 		CB2bullets.forEachAlive(renderGroup, this);
