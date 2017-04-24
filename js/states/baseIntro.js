@@ -1,1 +1,0 @@
-export default class Baseintro extends Phaser.State {}
