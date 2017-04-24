@@ -249,11 +249,11 @@ ammos.forEach(function(ammo) { ammo.body.angularVelocity = 200;});
 	}
 
 function walkTimer(){
-  if(cb1walking == true){
+  if(cb1walking == true && CB1.alive){
     foot.play();
     foot.volume = 0.5;
   }
-  if(cb2walking == true){
+  if(cb2walking == true && CB2.alive){
     foot2.play();
     foot2.volume = 0.5;
   }
@@ -286,7 +286,7 @@ function CB2addButtons() {
 function fixRotation(rotation) {  return rotation + 1.57079633;}
 
 function CB1fire() {
-if(CB1bulletnum > 0)
+if(CB1bulletnum > 0 && CB1.alive)
 {
     if ( CB1bullets.countDead() > 0 )
     {
@@ -307,7 +307,7 @@ if(CB1bulletnum > 0)
 }
 
 function CB2fire() {
-if(CB2bulletnum > 0)
+if(CB2bulletnum > 0 && CB2.alive)
 {
     if (CB2bullets.countDead() > 0)
     {
