@@ -65,21 +65,25 @@ function create() {
 	game.input.gamepad.pad2.deadZone = 0.01;
 
 	//groups
-	scenary = game.add.group();
-	scenary.enableBody = true;
-	game.physics.enable(scenary, Phaser.Physics.ARCADE);
+	scenery = game.add.group();
+	scenery.enableBody = true;
+	game.physics.enable(scenery, Phaser.Physics.ARCADE);
 
-	rock1 = game.add.sprite(200, 200, 'rock'); scenary.add(rock1);
-	rock2 = game.add.sprite(400, 500, 'rock'); scenary.add(rock2);
-	rock3 = game.add.sprite(500, 300, 'rock'); scenary.add(rock3);
-	rock4 = game.add.sprite(100, 570, 'rock'); scenary.add(rock4);
+	rock1 = game.add.sprite(200, 200, 'rock'); scenery.add(rock1);
+	rock2 = game.add.sprite(400, 500, 'rock'); scenery.add(rock2);
+	rock3 = game.add.sprite(500, 300, 'rock'); scenery.add(rock3);
+	rock3 = game.add.sprite(520, 280, 'rock'); scenery.add(rock3);
+	rock3 = game.add.sprite(540, 300, 'rock'); scenery.add(rock3);
+	rock4a = game.add.sprite(100, 570, 'rock'); scenery.add(rock4a);
+	rock4b = game.add.sprite(115, 560, 'rock'); scenery.add(rock4b);
+	rock4c = game.add.sprite(137, 575, 'rock'); scenery.add(rock4c);
 	//H = horizontal, V = vertical
-	crateH1 = game.add.sprite(580, 120, 'crate2x1'); scenary.add(crateH1);
-	crateH2 = game.add.sprite(120, 262, 'crate2x1'); scenary.add(crateH2);
-	crateV1 = game.add.sprite(342, 500, 'crate1x2'); scenary.add(crateV1);
-	crateV2 = game.add.sprite(370, 110, 'crate1x2'); scenary.add(crateV2);
+	crateH1 = game.add.sprite(580, 120, 'crate2x1'); scenery.add(crateH1);
+	crateH2 = game.add.sprite(120, 262, 'crate2x1'); scenery.add(crateH2);
+	crateV1 = game.add.sprite(342, 500, 'crate1x2'); scenery.add(crateV1);
+	crateV2 = game.add.sprite(370, 110, 'crate1x2'); scenery.add(crateV2);
 
-	scenary.forEachExists(function(child){ child.body.immovable = true; }, this);
+	scenery.forEachExists(function(child){ child.body.immovable = true; }, this);
 
 	ammos = game.add.group();
     ammos.enableBody = true;
@@ -206,10 +210,10 @@ function update() {
 			fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
 	}
 //======================= Collisions ==========================
-	game.physics.arcade.collide(CB1,scenary);
-	game.physics.arcade.collide(CB2,scenary);
-	game.physics.arcade.overlap(CB1bullets, scenary, function(CB1bullet){ CB1bullet.kill(); });
-	game.physics.arcade.overlap(CB2bullets, scenary, function(CB2bullet){ CB2bullet.kill(); });
+	game.physics.arcade.collide(CB1,scenery);
+	game.physics.arcade.collide(CB2,scenery);
+	game.physics.arcade.overlap(CB1bullets, scenery, function(CB1bullet){ CB1bullet.kill(); });
+	game.physics.arcade.overlap(CB2bullets, scenery, function(CB2bullet){ CB2bullet.kill(); });
 	game.physics.arcade.overlap(CB1bullets, CB2, function(CB1bulletAndCB2){CB1bulletAndCB2.kill(); });
 	game.physics.arcade.overlap(CB2bullets, CB1, function(CB2bulletAndCB1){CB2bulletAndCB1.kill(); });
 	game.physics.arcade.collide(ammos, CB2, function(CB2, ammo){ammo.kill();  reload.play(); CB2bulletnum++;  });
@@ -315,7 +319,7 @@ function render() {
 	CB1bullets.forEachAlive(renderGroup, this);
 
 	CB2bullets.forEachAlive(renderGroup, this);
-	scenary.forEachAlive(renderGroup, this);
+	scenery.forEachAlive(renderGroup, this);
     ammos.forEachAlive(renderGroup, this);
 	game.debug.body(CB1);
 	game.debug.body(CB2);
