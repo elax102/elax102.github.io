@@ -1,13 +1,15 @@
 
-var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render, setDeadZones: setDeadZones });
+var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render});
 
 
 const SPEED = 700;
-
 const DEADZONE_LEFTJS = 0.25;
 const DEADZONE_RIGHTJS = 0.1;
 
+const DEBUG_MODE = true;
+
 function preload () {
+	//Images
 	game.load.image('CB1', 'img/cowboy1.png');
 	game.load.image('CB2', 'img/cowboy2.png');
 	game.load.image('Bullet', 'img/bullet.png');
@@ -16,16 +18,20 @@ function preload () {
 	game.load.image('crate2x1', 'img/crate2x1.png');
 	game.load.image('crate1x2', 'img/crate1x2.png');
 
-  game.load.audio('foot', 'sfx/foot.wav');
-  game.load.audio('foot2', 'sfx/foot2.mp3');
-  game.load.audio('bulletspawn', 'sfx/bulletdrop.wav');
-  game.load.audio('reload', 'sfx/reload.wav');
-  game.load.audio('shoot', 'sfx/gunshot.mp3');
-  game.load.audio('dead', 'sfx/wilhelm-scream.wav');
-  game.load.audio('thunk', 'sfx/thunk.wav');
+	//Audio
+	game.load.audio('foot', 'sfx/foot.wav');
+	game.load.audio('foot2', 'sfx/foot2.mp3');
+	game.load.audio('bulletspawn', 'sfx/bulletdrop.wav');
+	game.load.audio('reload', 'sfx/reload.wav');
+	game.load.audio('shoot', 'sfx/gunshot.mp3');
+	game.load.audio('dead', 'sfx/wilhelm-scream.wav');
+	game.load.audio('thunk', 'sfx/thunk.wav');
 }
 
-  var genloc = [{x1:0,x2:350,y1:0,y2:350}, {x1:0,x2:350,y1:350,y2:700}, {x1:350,x2:700,y1:0,y2:350}, {x1:350,x2:700,y1:350,y2:700} ];
+  var genloc = [{x1:29,x2:332,y1:29,y2:167}, {x1:463,x2:551,y1:29,y2:251}, {x1:293,x2:471,y1:254,y2:471}, 
+	{x1:29,x2:313,y1:355,y2:505}, {x1:493,x2:671,y1:393,y2:671}, {x1:230,x2:313,y1:497,y2:671},
+	{x1:463,x2:671,y1:213,y2:251}, {x1:29,x2:671,y1:668,y2:671}, {x1:29,x2:671,y1:29,y2:107},
+	{x1:29,x2:671,y1:406,y2:471} ];
  // var fireRate = 1000;
   var nextFire = 0;
   var CB1bulletnum = 1;
@@ -54,11 +60,12 @@ var ammos;
   var cb2walking = false;
   var timer;
   var bulgentime;
+  
 function create() {
   timer = game.time.create(false);
   timer.loop(200, walkTimer, this);
   timer.start();
-  
+
   bulgentime = game.time.create(false);
   bulgentime.loop(5000, bulgenloc, this);
   bulgentime.start();
@@ -221,10 +228,10 @@ function update() {
 ammos.forEach(function(ammo) { ammo.body.angularVelocity = 200;});
 	game.physics.arcade.collide(CB1,scenery);
 	game.physics.arcade.collide(CB2,scenery);
-	game.physics.arcade.overlap(CB1bullets, scenery, function(CB1bullet){ CB1bullet.kill(); });
-	game.physics.arcade.overlap(CB2bullets, scenery, function(CB2bullet){ CB2bullet.kill(); });
-	game.physics.arcade.overlap(CB1bullets, CB2, function(CB1bulletAndCB2){CB1bulletAndCB2.kill(); });
-	game.physics.arcade.overlap(CB2bullets, CB1, function(CB2bulletAndCB1){CB2bulletAndCB1.kill(); });
+	game.physics.arcade.overlap(CB1bullets, scenery, function(CB1bullet){ CB1bullet.kill(), thunk.play(); });
+	game.physics.arcade.overlap(CB2bullets, scenery, function(CB2bullet){ CB2bullet.kill(), thunk.play(); });
+	game.physics.arcade.overlap(CB1bullets, CB2, function(CB1bulletAndCB2){CB1bulletAndCB2.kill(), dead.play(); });
+	game.physics.arcade.overlap(CB2bullets, CB1, function(CB2bulletAndCB1){CB2bulletAndCB1.kill(), dead.play(); });
 	if(CB2bulletnum == 0 ){
 	game.physics.arcade.collide(ammos, CB2, function(CB2, ammo){ammo.kill();  reload.play(); CB2bulletnum++;  });
 	CB2mag.visible = false;
@@ -283,7 +290,7 @@ if(CB1bulletnum > 0)
 {
     if ( CB1bullets.countDead() > 0 )
     {
-        
+
         var CB1bullet = CB1bullets.getFirstDead();
 		CB1bullet.reset(CB1.x, CB1.y);
 		CB1bullet.anchor.set(0.5, 0.5);
@@ -304,7 +311,7 @@ if(CB2bulletnum > 0)
 {
     if (CB2bullets.countDead() > 0)
     {
-       
+
 		//bulgenloc();
         var CB2bullet = CB2bullets.getFirstDead();
         CB2bullet.reset(CB2.x, CB2.y);
@@ -325,7 +332,7 @@ function bulgenloc ()
 	if(ammos.total > 0){
 		ammo.kill();
 	}
-var zone=genloc[game.rnd.integerInRange(0, 3)];
+var zone=genloc[game.rnd.integerInRange(0, 9)];
   bsx=game.rnd.integerInRange(zone.x1, zone.x2);
   bsy=game.rnd.integerInRange(zone.y1, zone.y2);
 	ammo = ammos.create(bsx, bsy, 'Bullet');
@@ -343,24 +350,21 @@ function destroySprite (sprite) {
 
 function render() {
 
-    game.debug.text('Active Bullets: ' + CB1bulletnum, 32, 32);
-	game.debug.text('Active Bullets: ' + CB2bulletnum, 300, 32);
-	game.debug.text('' + bsx + '/' + bsy, 45, 45);
-    game.debug.spriteInfo(CB1, 32, 450);
+	if(DEBUG_MODE) {
 
-	CB1bullets.forEachAlive(renderGroup, this);
-
-	CB2bullets.forEachAlive(renderGroup, this);
-	scenery.forEachAlive(renderGroup, this);
-    ammos.forEachAlive(renderGroup, this);
-	game.debug.body(CB1);
-	game.debug.body(CB2);
+		game.debug.text('Active Bullets: ' + CB1bulletnum, 32, 32);
+		game.debug.text('Active Bullets: ' + CB2bulletnum, 300, 32);
+		game.debug.text('' + bsx + '/' + bsy, 45, 45);
+		game.debug.spriteInfo(CB1, 32, 450);
+		CB1bullets.forEachAlive(renderGroup, this);
+		CB2bullets.forEachAlive(renderGroup, this);
+		scenery.forEachAlive(renderGroup, this);
+		ammos.forEachAlive(renderGroup, this);
+		game.debug.body(CB1);
+		game.debug.body(CB2);
+	}
 }
 
 function renderGroup(member) {
 	game.debug.body(member);
-}
-
-function setDeadZones(Deadzone){
-	Deadzone = 0.5;
 }
