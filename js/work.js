@@ -6,7 +6,7 @@ const SPEED = 700;
 const DEADZONE_LEFTJS = 0.25;
 const DEADZONE_RIGHTJS = 0.1;
 
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 
 function preload () {
 	//Images
@@ -59,6 +59,7 @@ var ammos;
   var cb1walking = false;
   var cb2walking = false;
   var timer;
+  var ResetTimer;
   var bulgentime;
   
 function create() {
@@ -79,6 +80,13 @@ function create() {
 	
 	CB1mag = game.add.sprite(0, 0, 'Bullet');
 	CB2mag = game.add.sprite(660, 0, 'Bullet');
+	
+	CB1WinText = game.add.text(380, 350, 'Cowboy Red wins!'); 
+	CB1WinText.anchor.set(0.5); CB1WinText.visible = false;
+	CB2WinText = game.add.text(380, 350, 'Cowboy Blue wins!'); 
+	CB2WinText.anchor.set(0.5); CB2WinText.visible = false;
+	
+    
 	//groups
 	scenery = game.add.group();
 	scenery.enableBody = true;
@@ -246,8 +254,25 @@ ammos.forEach(function(ammo) { ammo.body.angularVelocity = 200;});
 	if(CB2bulletnum == 1){
 		CB2mag.visible = true;
 	}
+	//================== Reset ==================
+	if(!CB1.alive || !CB2.alive){
+		
+		if(CB1.alive){ CB1WinText.visible = true; }
+		else{ CB2WinText.visible = true; }
+		CB1.alive = true; CB2.alive = true;
+		game.time.events.add(3000, ResetGame, this);
 	}
+}
 
+function ResetGame() {
+	CB1.reset(100,100);
+	CB2.reset(600,600);
+	CB1bulletnum = 1;
+	CB2bulletnum = 1;
+	CB1WinText.visible = false;
+	CB2WinText.visible = false;
+}
+	
 function walkTimer(){
   if(cb1walking == true && CB1.alive){
     foot.play();
@@ -257,6 +282,7 @@ function walkTimer(){
     foot2.play();
     foot2.volume = 0.5;
   }
+  
 }
 
 function CB1addButtons() {
@@ -354,7 +380,8 @@ function render() {
 
 		game.debug.text('Active Bullets: ' + CB1bulletnum, 32, 32);
 		game.debug.text('Active Bullets: ' + CB2bulletnum, 300, 32);
-		game.debug.text('' + bsx + '/' + bsy, 45, 45);
+		game.debug.text('Bullet Spawn: ' + bsx + '/' + bsy, 32, 48);
+		game.debug.text('Reset? ' + !CB2.alive, 32, 64);
 		game.debug.spriteInfo(CB1, 32, 450);
 		CB1bullets.forEachAlive(renderGroup, this);
 		CB2bullets.forEachAlive(renderGroup, this);
