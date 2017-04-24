@@ -3,11 +3,13 @@ var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create
 
 
 const SPEED = 700;
-
 const DEADZONE_LEFTJS = 0.25;
 const DEADZONE_RIGHTJS = 0.1;
 
+const DEBUG_MODE = true;
+
 function preload () {
+	//Images
 	game.load.image('CB1', 'img/cowboy1.png');
 	game.load.image('CB2', 'img/cowboy2.png');
 	game.load.image('Bullet', 'img/bullet.png');
@@ -16,13 +18,14 @@ function preload () {
 	game.load.image('crate2x1', 'img/crate2x1.png');
 	game.load.image('crate1x2', 'img/crate1x2.png');
 
-  game.load.audio('foot', 'sfx/foot.wav');
-  game.load.audio('foot2', 'sfx/foot2.mp3');
-  game.load.audio('bulletspawn', 'sfx/bulletdrop.wav');
-  game.load.audio('reload', 'sfx/reload.wav');
-  game.load.audio('shoot', 'sfx/gunshot.mp3');
-  game.load.audio('dead', 'sfx/wilhelm-scream.wav');
-  game.load.audio('thunk', 'sfx/thunk.wav');
+	//Audio
+	game.load.audio('foot', 'sfx/foot.wav');
+	game.load.audio('foot2', 'sfx/foot2.mp3');
+	game.load.audio('bulletspawn', 'sfx/bulletdrop.wav');
+	game.load.audio('reload', 'sfx/reload.wav');
+	game.load.audio('shoot', 'sfx/gunshot.mp3');
+	game.load.audio('dead', 'sfx/wilhelm-scream.wav');
+	game.load.audio('thunk', 'sfx/thunk.wav');
 }
 
   var genloc = [{x1:0,x2:350,y1:0,y2:350}, {x1:0,x2:350,y1:350,y2:700}, {x1:350,x2:700,y1:0,y2:350}, {x1:350,x2:700,y1:350,y2:700} ];
@@ -327,19 +330,20 @@ function destroySprite (sprite) {
 }
 
 function render() {
-
-    game.debug.text('Active Bullets: ' + CB1bulletnum, 32, 32);
-	game.debug.text('Active Bullets: ' + CB2bulletnum, 300, 32);
-	game.debug.text('' + bsx + '/' + bsy, 45, 45);
-    game.debug.spriteInfo(CB1, 32, 450);
-
-	CB1bullets.forEachAlive(renderGroup, this);
-
-	CB2bullets.forEachAlive(renderGroup, this);
-	scenery.forEachAlive(renderGroup, this);
-    ammos.forEachAlive(renderGroup, this);
-	game.debug.body(CB1);
-	game.debug.body(CB2);
+	
+	if(DEBUG_MODE) {
+			
+		game.debug.text('Active Bullets: ' + CB1bulletnum, 32, 32);
+		game.debug.text('Active Bullets: ' + CB2bulletnum, 300, 32);
+		game.debug.text('' + bsx + '/' + bsy, 45, 45);
+		game.debug.spriteInfo(CB1, 32, 450);
+		CB1bullets.forEachAlive(renderGroup, this);
+		CB2bullets.forEachAlive(renderGroup, this);
+		scenery.forEachAlive(renderGroup, this);
+		ammos.forEachAlive(renderGroup, this);
+		game.debug.body(CB1);
+		game.debug.body(CB2);
+	}
 }
 
 function renderGroup(member) {
