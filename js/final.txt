@@ -1,4 +1,3 @@
-
 var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render, setDeadZones: setDeadZones });
 
 
@@ -41,9 +40,7 @@ var bsy;
   var CB2bullet;
 var ammos;
   var ammo;
-	var CB1mag;
-	var CB2mag;
-  
+
   var foot;
   var bulletSpawn;
   var reload;
@@ -69,9 +66,7 @@ function create() {
 	game.input.gamepad.start();
 	game.input.gamepad.pad1.deadZone = 0.01;
 	game.input.gamepad.pad2.deadZone = 0.01;
-	
-	CB1mag = game.add.sprite(0, 0, 'Bullet');
-	CB2mag = game.add.sprite(660, 0, 'Bullet');
+
 	//groups
 	scenery = game.add.group();
 	scenery.enableBody = true;
@@ -218,7 +213,6 @@ function update() {
 			fixRotation(Math.atan2(CB2rightStickY, CB2rightStickX)) * (180/Math.PI);
 	}
 //======================= Collisions ==========================
-ammos.forEach(function(ammo) { ammo.body.angularVelocity = 200;});
 	game.physics.arcade.collide(CB1,scenery);
 	game.physics.arcade.collide(CB2,scenery);
 	game.physics.arcade.overlap(CB1bullets, scenery, function(CB1bullet){ CB1bullet.kill(); });
@@ -227,17 +221,9 @@ ammos.forEach(function(ammo) { ammo.body.angularVelocity = 200;});
 	game.physics.arcade.overlap(CB2bullets, CB1, function(CB2bulletAndCB1){CB2bulletAndCB1.kill(); });
 	if(CB2bulletnum == 0 ){
 	game.physics.arcade.collide(ammos, CB2, function(CB2, ammo){ammo.kill();  reload.play(); CB2bulletnum++;  });
-	CB2mag.visible = false;
 	}
 	if(CB1bulletnum == 0){
 	game.physics.arcade.collide(ammos, CB1, function(CB1, ammo){ammo.kill();  reload.play(); CB1bulletnum++;  });
-	CB1mag.visible = false;
-	}
-	if(CB1bulletnum == 1){
-		CB1mag.visible = true;
-	}
-	if(CB2bulletnum == 1){
-		CB2mag.visible = true;
 	}
 	}
 
@@ -331,8 +317,6 @@ var zone=genloc[game.rnd.integerInRange(0, 3)];
 	ammo = ammos.create(bsx, bsy, 'Bullet');
 	ammo.body.setSize(13, 13, 8, 5);
 	ammo.body.setCircle(9);
-	ammo.anchor.setTo(0.5, 0.5);
-	
 	bulletSpawn.play();
 }
 
