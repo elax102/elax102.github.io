@@ -59,7 +59,7 @@ function create() {
   timer = game.time.create(false);
   timer.loop(200, walkTimer, this);
   timer.start();
-  
+
   bulgentime = game.time.create(false);
   bulgentime.loop(5000, bulgenloc, this);
   bulgentime.start();
@@ -219,10 +219,10 @@ function update() {
 //======================= Collisions ==========================
 	game.physics.arcade.collide(CB1,scenery);
 	game.physics.arcade.collide(CB2,scenery);
-	game.physics.arcade.overlap(CB1bullets, scenery, function(CB1bullet){ CB1bullet.kill(); });
-	game.physics.arcade.overlap(CB2bullets, scenery, function(CB2bullet){ CB2bullet.kill(); });
-	game.physics.arcade.overlap(CB1bullets, CB2, function(CB1bulletAndCB2){CB1bulletAndCB2.kill(); });
-	game.physics.arcade.overlap(CB2bullets, CB1, function(CB2bulletAndCB1){CB2bulletAndCB1.kill(); });
+	game.physics.arcade.overlap(CB1bullets, scenery, function(CB1bullet){ CB1bullet.kill(), thunk.play(); });
+	game.physics.arcade.overlap(CB2bullets, scenery, function(CB2bullet){ CB2bullet.kill(), thunk.play(); });
+	game.physics.arcade.overlap(CB1bullets, CB2, function(CB1bulletAndCB2){CB1bulletAndCB2.kill(), dead.play(); });
+	game.physics.arcade.overlap(CB2bullets, CB1, function(CB2bulletAndCB1){CB2bulletAndCB1.kill(), dead.play(); });
 	if(CB2bulletnum == 0 ){
 	game.physics.arcade.collide(ammos, CB2, function(CB2, ammo){ammo.kill();  reload.play(); CB2bulletnum++;  });
 	}
@@ -273,7 +273,7 @@ if(CB1bulletnum > 0)
 {
     if ( CB1bullets.countDead() > 0 )
     {
-        
+
         var CB1bullet = CB1bullets.getFirstDead();
 		CB1bullet.reset(CB1.x, CB1.y);
 		CB1bullet.anchor.set(0.5, 0.5);
@@ -294,7 +294,7 @@ if(CB2bulletnum > 0)
 {
     if (CB2bullets.countDead() > 0)
     {
-       
+
 		//bulgenloc();
         var CB2bullet = CB2bullets.getFirstDead();
         CB2bullet.reset(CB2.x, CB2.y);
@@ -330,9 +330,9 @@ function destroySprite (sprite) {
 }
 
 function render() {
-	
+
 	if(DEBUG_MODE) {
-			
+
 		game.debug.text('Active Bullets: ' + CB1bulletnum, 32, 32);
 		game.debug.text('Active Bullets: ' + CB2bulletnum, 300, 32);
 		game.debug.text('' + bsx + '/' + bsy, 45, 45);
