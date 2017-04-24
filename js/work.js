@@ -26,7 +26,7 @@ function preload () {
 }
 
   var genloc = [{x1:0,x2:350,y1:0,y2:350}, {x1:0,x2:350,y1:350,y2:700}, {x1:350,x2:700,y1:0,y2:350}, {x1:350,x2:700,y1:350,y2:700} ];
-  var fireRate = 1000;
+ // var fireRate = 1000;
   var nextFire = 0;
   var CB1bulletnum = 1;
   var CB2bulletnum = 1;
@@ -51,11 +51,15 @@ var ammos;
   var cb1walking = false;
   var cb2walking = false;
   var timer;
-
+  var bulgentime;
 function create() {
   timer = game.time.create(false);
   timer.loop(200, walkTimer, this);
   timer.start();
+  
+  bulgentime = game.time.create(false);
+  bulgentime.loop(5000, bulgenloc, this);
+  bulgentime.start();
 
 	cursors = game.input.keyboard.createCursorKeys();
 	game.add.tileSprite(0, 0, 700, 700, 'background');
@@ -210,9 +214,13 @@ function update() {
 	game.physics.arcade.overlap(CB2bullets, scenary, function(CB2bullet){ CB2bullet.kill(); });
 	game.physics.arcade.overlap(CB1bullets, CB2, function(CB1bulletAndCB2){CB1bulletAndCB2.kill(); });
 	game.physics.arcade.overlap(CB2bullets, CB1, function(CB2bulletAndCB1){CB2bulletAndCB1.kill(); });
+	if(CB2bulletnum == 0 ){
 	game.physics.arcade.collide(ammos, CB2, function(CB2, ammo){ammo.kill();  reload.play(); CB2bulletnum++;  });
+	}
+	if(CB1bulletnum == 0){
 	game.physics.arcade.collide(ammos, CB1, function(CB1, ammo){ammo.kill();  reload.play(); CB1bulletnum++;  });
-}
+	}
+	}
 
 function walkTimer(){
   if(cb1walking == true){
@@ -252,10 +260,11 @@ function CB2addButtons() {
 function fixRotation(rotation) {  return rotation + 1.57079633;}
 
 function CB1fire() {
-
-    if (game.time.now > nextFire && CB1bullets.countDead() > 0)
+if(CB1bulletnum > 0)
+{
+    if ( CB1bullets.countDead() > 0 )
     {
-        nextFire = game.time.now + fireRate;
+        
         var CB1bullet = CB1bullets.getFirstDead();
 		CB1bullet.reset(CB1.x, CB1.y);
 		CB1bullet.anchor.set(0.5, 0.5);
@@ -264,18 +273,20 @@ function CB1fire() {
 		CB1bullet.body.setCircle(9);
         game.physics.arcade.velocityFromRotation(CB1.rotation -1.57079633, 2000, CB1bullet.body.velocity);
 		CB1bulletnum = CB1bulletnum-1;
-		bulgenloc();
+		//bulgenloc();
 
     shoot.play();
     }
 }
+}
 
 function CB2fire() {
-
-    if (game.time.now > nextFire && CB2bullets.countDead() > 0)
+if(CB2bulletnum > 0)
+{
+    if (CB2bullets.countDead() > 0)
     {
-        nextFire = game.time.now + fireRate;
-		bulgenloc();
+       
+		//bulgenloc();
         var CB2bullet = CB2bullets.getFirstDead();
         CB2bullet.reset(CB2.x, CB2.y);
 		CB2bullet.anchor.set(0.5, 0.5);
@@ -288,15 +299,20 @@ function CB2fire() {
     shoot.play();
     }
 }
+}
 
 function bulgenloc ()
 {
+	if(ammos.total > 0){
+		ammo.kill();
+	}
 var zone=genloc[game.rnd.integerInRange(0, 3)];
   bsx=game.rnd.integerInRange(zone.x1, zone.x2);
   bsy=game.rnd.integerInRange(zone.y1, zone.y2);
 	ammo = ammos.create(bsx, bsy, 'Bullet');
 	ammo.body.setSize(13, 13, 8, 5);
 	ammo.body.setCircle(9);
+	bulletSpawn.play();
 }
 
 function destroySprite (sprite) {
@@ -306,7 +322,8 @@ function destroySprite (sprite) {
 
 function render() {
 
-    game.debug.text('Active Bullets: ' + CB2bulletnum + ' / ' + CB1bullets.total, 32, 32);
+    game.debug.text('Active Bullets: ' + CB1bulletnum, 32, 32);
+	game.debug.text('Active Bullets: ' + CB2bulletnum, 300, 32);
 	game.debug.text('' + bsx + '/' + bsy, 45, 45);
     game.debug.spriteInfo(CB1, 32, 450);
 
